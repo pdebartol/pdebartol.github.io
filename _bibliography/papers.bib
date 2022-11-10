@@ -1,82 +1,49 @@
----
----
-
-@string{aps = {American Physical Society,}}
-
-@book{einstein1956investigations,
-  bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation,},
-  preview={brownian-motion.gif}
+@article{pier2022certified,
+      title={{Certified defences hurt generalisation}}, 
+      author={Piersilvio De Bartolomeis and Jacob Clarysse and Fanny Yang and Amartya Sanyal},
+      year={2022},
+      journal={Understanding Deep Learning Through Empirical Falsification Workshop (NeurIPS), Contributed Talk,},
+      eprint={2202.01511},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+     preview={certified.png},
+     abstract={In recent years, much work has been devoted to designing certified defences for neural networks, i.e., methods for learning neural networks that are provably robust to certain adversarial perturbations. Due to the non-convexity of the problem, dominant approaches in this area rely on convex approximations, which are inherently loose. In this paper, we question the effectiveness of such approaches for realistic computer vision tasks. First, we provide extensive empirical evidence to show that certified defences suffer not only worse accuracy but also worse robustness and fairness than empirical defences. We hypothesise that the reason why certified defences suffer in generalisation is (i) the large number of relaxed non-convex constraints and (ii) strong alignment between the adversarial perturbations and the "signal" direction. We provide a combination of theoretical and experimental evidence to support these hypotheses.
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
-  bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics,},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers,}
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein, A. and Podolsky, B. and Rosen, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.,},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  selected={true}
+
+@article{mutti2022challenging,
+      title={Challenging Common Assumptions in Convex Reinforcement Learning}, 
+      author={Mirco Mutti* and Riccardo De Santi* and Piersilvio De Bartolomeis and Marcello Restelli},
+      year={2022},
+     journal = {Advances in {Neural} {Information} {Processing} {Systems} (NeurIPS),},
+      eprint={2202.01511},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      abstract={The classic Reinforcement Learning (RL) formulation concerns the maximization of a scalar reward function. More recently, convex RL has been introduced to extend the RL formulation to all the objectives that are convex functions of the state distribution induced by a policy. Notably, convex RL covers several relevant applications that do not fall into the scalar formulation, including imitation learning, risk-averse RL, and pure exploration. In classic RL, it is common to optimize an infinite trials objective, which accounts for the state distribution instead of the empirical state visitation frequencies, even though the actual number of trajectories is always finite in practice. This is theoretically sound since the infinite trials and finite trials objectives are equivalent and thus lead to the same optimal policy. In this paper, we show that this hidden assumption does not hold in convex RL. In particular, we prove that erroneously optimizing the infinite trials objective in place of the actual finite trials one, as it is usually done, can lead to a significant approximation error. Since the finite trials setting is the default in both simulated and real-world RL, we believe shedding light on this issue will lead to better approaches and methodologies for convex RL, impacting relevant research areas such as imitation learning, risk-averse RL, and pure exploration among others.},
+      pdf={https://openreview.net/pdf?id=13S0tUMqynI},
+        preview={convex.png}
 }
 
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik,},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
+
+@article{rds2022,
+      title={Enhancing Unit-tests for Invariance Discovery}, 
+      author={Piersilvio De Bartolomeis and Antonio Orvieto and  Giambattista Parascandolo},
+      year={2022},
+      journal={Spurious Correlations, Invariance, and Stability Workshop (ICML),},
+      eprint={},
+      pdf={https://openreview.net/pdf?id=-XVMGVmjNLs},
+      abstract={Recently, Aubin et al. (2021) proposed a set of
+linear low-dimensional problems to precisely evaluate different types of out-of-distribution generalization. In this paper, we show that one of these
+problems can already be solved by established
+algorithms, simply by better hyper-parameter tuning. We then propose an enhanced version of
+the linear unit-tests. To the best of our hyperparameter search and within the set of algorithms
+evaluated, AND-mask is the best performing algorithm on this new suite of tests. Our findings
+on synthetic data are further reinforced by experiments on an image classification task where we
+introduce spurious correlations.},
+      archivePrefix={},
+      preview={unit-tests.png},
+      primaryClass={}
 }
 
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.,},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
-}
-
-@book{przibram1967letters,
-  bibtex_show={true},
-  title={Letters on wave mechanics},
-  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
-  year={1967},
-  publisher={Vision},
-  preview={wave-mechanics.gif}
-}

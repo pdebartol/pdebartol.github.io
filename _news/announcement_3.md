@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2016-01-15 07:59:00-0400
+date: 2022-10-20 15:59:00-0400
 inline: true
 ---
+Our paper titled “Certified defences hurt generalisation” has been accepted as a contributed talk at the NeurIPS 2022 workshop on <a href="https://sites.google.com/view/icbinb-2022/home">Understanding Deep Learning Through Empirical Falsification</a>.
 
-A simple inline announcement with Markdown emoji! :sparkles: :smile:
