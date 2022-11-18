@@ -94,10 +94,10 @@ contact_note: >
 google_analytics: G-M7TH7B3K2F
 panelbear_analytics:  # panelbear analytics site ID (format: XXXXXXXXX)
 
-google_site_verification:  # your google-site-verification ID (Google Search Console)
+google_site_verification: 7v_qh-WhWfxbdJGWwg1I2FccnF-ad61wbH_MnWGvyjM   # your google-site-verification ID (Google Search Console)
 bing_site_verification:  # out your bing-site-verification ID (Bing Webmaster)
 
-
+<meta name="google-site-verification" content="" />
 
 # -----------------------------------------------------------------------------
 # Collections
