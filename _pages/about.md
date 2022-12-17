@@ -16,7 +16,7 @@ social: true  # includes social icons at the bottom of the page
 ---
 
 
-I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a> and part of the <a href="https://sml.inf.ethz.ch/">Statistical Machine Learning</a> group. 
+I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a> and <a href="http://web.math.ku.dk/~peters/"> Jonas Peters</a>. 
 
  I earned a Data Science M.Sc. at ETH Zürich, with a strong focus on statistics and machine learning. Prior to that, I earned a Computer Science B.Sc. at Politecnico di Milano and I spent an exchange semester at the Hong Kong University of Science and Technology.
 
