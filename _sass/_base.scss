@@ -457,6 +457,8 @@ footer.sticky-bottom {
 
 // Publications
 
+// Publications
+
 .publications {
   margin-top: 2rem;
   h1 {
@@ -481,17 +483,12 @@ footer.sticky-bottom {
     text-align: right;
   }
   ol.bibliography {
-    list-style: none;
+    list-style: disc inside none;
     padding: 0;
     margin-top: 0;
 
     li {
       margin-bottom: 1rem;
-      .preview {
-        width: 100%;
-        min-width: 80px;
-        max-width: 200px;
-      }
       .abbr {
         height: 2rem;
         margin-bottom: 0.5rem;
@@ -514,6 +511,7 @@ footer.sticky-bottom {
       }
       .title {
         font-weight: bolder;
+        margin-top:-1.4rem;
       }
       .author {
         a {
@@ -527,17 +525,126 @@ footer.sticky-bottom {
           border-bottom: 1px solid;
           font-style: normal;
         }
-        > span.more-authors {
-          color: var(--global-text-color-light);
-          border-bottom: 1px dashed var(--global-text-color-light);
-          cursor: pointer;
-          &:hover {
-              color: var(--global-text-color);
-              border-bottom: 1px dashed var(--global-text-color);
-          }
-        }
       }
       .links {
+        a.arxiv {
+          font-size: small;
+          color: white;
+          background-color: #{$blue-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.pdf {
+          font-size: small;
+          color: white;
+          background-color: #{$blue-color-dark};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.workshop {
+          font-size: small;
+          color: white;
+          background-color: #{$cyan-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.slides {
+          font-size: small;
+          color: white;
+          background-color: #{$orange-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.video {
+          font-size: small;
+          color: white;
+          background-color: #{$yellow-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.abstract {
+          font-size: small;
+          border: 1px solid var(--global-text-color);
+          color: black;
+          background-color: #{$white-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: black;
+            border: dashed 1px var(--global-text-color);
+          }
+        }
+        a.blog {
+          font-size: small;
+          color: white;
+          background-color: #{$green-color-lime};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.code {
+          font-size: small;
+          color: white;
+          background-color: #{$green-color};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
+        a.poster {
+          font-size: small;
+          color: white;
+          background-color: #{$red-color-dark};
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          &:hover {
+            color: white;
+            border-color: var(--global-theme-color);
+          }
+        }
         a.btn {
           color: var(--global-text-color);
           border: 1px solid var(--global-text-color);
@@ -556,7 +663,7 @@ footer.sticky-bottom {
         max-height: 0px;
         overflow: hidden;
         text-align: justify;
-        transition-property: 0.15s ease;
+        -webkit-transition: 0.15s ease;
         -moz-transition: 0.15s ease;
         -ms-transition: 0.15s ease;
         -o-transition: 0.15s ease;
@@ -569,12 +676,11 @@ footer.sticky-bottom {
         pre {
           font-size: 1em;
           line-height: 1.4em;
-          padding: 10px;
         }
       }
       .hidden.open {
         max-height: 100em;
-        transition-property: 0.15s ease;
+        -webkit-transition: 0.15s ease;
         -moz-transition: 0.15s ease;
         -ms-transition: 0.15s ease;
         -o-transition: 0.15s ease;
@@ -582,6 +688,7 @@ footer.sticky-bottom {
       }
       div.abstract.hidden {
         border: dashed 1px var(--global-bg-color);
+        margin-top: 15px;
       }
       div.abstract.hidden.open {
         border-color: var(--global-text-color);
@@ -589,6 +696,7 @@ footer.sticky-bottom {
     }
   }
 }
+
 
 // Rouge Color Customization
 figure.highlight {

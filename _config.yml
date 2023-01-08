@@ -7,6 +7,7 @@ first_name: Piersilvio
 middle_name: 
 last_name: De Bartolomeis
 email: pdebartol@ethz.ch
+author_name: Piersilvio De Bartolomeis
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 footer_text: >
@@ -66,7 +67,7 @@ og_image: # The site-wide (default for all links) Open Graph preview image
 # Social integration
 # -----------------------------------------------------------------------------
 
-github_username: pdebartol # your GitHub user name
+github_username:  # your GitHub user name
 gitlab_username: # your GitLab user name
 twitter_username: pdebartols # your Twitter handle
 linkedin_username: piersilvio-de-bartolomeis-19aa67170 # your LinkedIn user name
