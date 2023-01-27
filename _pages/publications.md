@@ -9,7 +9,7 @@ nav_order: 1
 ---
 <!-- _pages/publications.md -->
 
-
+<div>
 {%- for y in page.years %}
   {% bibliography -f papers -q @*[year={{y}}]* %}
 {% endfor %}
