@@ -1,10 +1,10 @@
 ---
 layout: page
-title: project 1
-description: a project with a background image
+title: Tiramisù
+description: 
 img: assets/img/12.jpg
 importance: 1
-category: work
+redirect: /assets/pdf/resume.pdf
 ---
 
 Every project has a beautiful feature showcase page.
