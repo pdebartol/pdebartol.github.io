@@ -2,10 +2,10 @@
 layout: page
 title: Tiramisù
 description: 
-img: assets/img/tiramisu.jpeg
+img: assets/img/tiramisu.jpg
 importance: 1
-redirect: /assets/pdf/resume.pdf
-category: work
+redirect: /assets/pdf/tiramisu_recipe.pdf
+category: dessert
 ---
 
 Every project has a beautiful feature showcase page.

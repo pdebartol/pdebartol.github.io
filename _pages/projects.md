@@ -1,12 +1,13 @@
 ---
 layout: page
 title: recipes
-permalink: /projects/
+permalink: /recipes/
 description: Mitigating the reproducibility crisis of good Italian recipes.
 nav: true
-nav_order: 2
-display_categories: [work, fun]
+nav_order: 4
 horizontal: false
+display_categories: [dessert]
+
 ---
 
 <!-- pages/projects.md -->
