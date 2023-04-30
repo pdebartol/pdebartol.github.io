@@ -2,7 +2,7 @@
 layout: page
 permalink: /publications/
 title: publications
-description: Conference and workshop publications.
+description: conference and workshop publications.
 years: [2022]
 nav: true
 nav_order: 1

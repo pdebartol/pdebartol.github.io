@@ -2,7 +2,7 @@
 layout: page
 title: recipes
 permalink: /recipes/
-description: Mitigating the reproducibility crisis of good Italian recipes.
+description: towards mitigating the reproducibility crisis of good Italian recipes.
 nav: true
 nav_order: 4
 horizontal: false
