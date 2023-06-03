@@ -2,13 +2,13 @@
 layout: page
 permalink: /publications/
 title: research
-description: publications by categories in reversed chronological order. [*] denotes equal contribution.
+description: [*] denotes equal contribution.
 years: [2023, 2022]
 nav: true
 nav_order: 1
 ---
 
-#### conferences
+#### publications
 <!-- _pages/publications.md -->
 <div class="publications">
 
