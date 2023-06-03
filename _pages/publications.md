@@ -8,7 +8,7 @@ nav: true
 nav_order: 1
 ---
 
-#### recent publications
+#### conferences
 <!-- _pages/publications.md -->
 <div class="publications">
 
