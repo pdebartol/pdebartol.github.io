@@ -2,7 +2,7 @@
 layout: page
 permalink: /publications/
 title: research
-description: \[*] denotes equal contribution.
+description: papers by categories in reversed chronological order. [*] denotes equal contribution.
 years: [2023, 2022]
 nav: true
 nav_order: 1
