@@ -7,6 +7,8 @@ years: [2023, 2022]
 nav: true
 nav_order: 1
 ---
+
+#### recent publications
 <!-- _pages/publications.md -->
 <div class="publications">
 
@@ -16,3 +18,12 @@ nav_order: 1
 
 </div>
 
+#### workshops
+
+<div class="publications">
+
+{%- for y in page.years %}
+  {% bibliography -f workshop -q @*[year={{y}}]* %}
+{% endfor %}
+
+</div>
