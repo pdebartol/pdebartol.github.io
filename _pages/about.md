@@ -20,6 +20,4 @@ I am a PhD student in the Computer Science Department at ETH Zürich, advised by
  I earned a Data Science M.Sc. at ETH Zürich, with a strong focus on statistics and machine learning. Prior to that, I earned a Computer Science B.Sc. at Politecnico di Milano and I spent an exchange semester at the Hong Kong University of Science and Technology.
  
 
-I am also a member of <a href="https://leadthefuture.tech/"> LeadTheFuture</a>, a leading mentorship non-profit organization for italian students in STEM. 
-
-In my free time, I search for great food. <a href="https://docs.google.com/spreadsheets/d/1dLAPyMRM7EseTCzUJxRHxg5cH28zorRAejlY0h7wbR8/edit?usp=sharing"> Here</a>re you can find a list of my favorite places around the world.
+In my free time, I search for great food. <a href="https://docs.google.com/spreadsheets/d/1dLAPyMRM7EseTCzUJxRHxg5cH28zorRAejlY0h7wbR8/edit?usp=sharing"> Here</a> you can find a list of my favorite places around the world.
