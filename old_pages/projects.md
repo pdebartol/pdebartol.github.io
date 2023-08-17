@@ -3,7 +3,7 @@ layout: page
 title: recipes
 permalink: /recipes/
 description: towards mitigating the reproducibility crisis of good Italian recipes.
-nav: true
+nav: false
 nav_order: 4
 horizontal: false
 display_categories: [dessert]
