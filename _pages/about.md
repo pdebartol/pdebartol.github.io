@@ -15,11 +15,11 @@ social: true  # includes social icons at the bottom of the page
 ---
 
 
-I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a> and <a href="https://people.math.ethz.ch/~jopeters/"> Jonas Peters</a>. 
-
+I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a> and <a href="https://people.math.ethz.ch/~jopeters/"> Jonas Peters</a>. Currently, I am particularly interested in developing methods to tackle the unobserved confounding problem in observational studies. 
 
  I earned a Data Science M.Sc. at ETH Zürich, with a strong focus on statistics and machine learning. Prior to that, I earned a Computer Science B.Sc. at Politecnico di Milano and I spent an exchange semester at the Hong Kong University of Science and Technology.
+ 
 
-Currently, I am particularly interested in developing robust and fair methods to tackle complex problems in health care.
+I am also a member of <a href="https://leadthefuture.tech/"> LeadTheFuture</a>, a leading mentorship non-profit organization for italian students in STEM. 
 
- I am also a member of <a href="https://leadthefuture.tech/"> LeadTheFuture</a>, a leading mentorship non-profit organization for students in STEM.
+In my free time, I search for great food. <a href="https://docs.google.com/spreadsheets/d/1dLAPyMRM7EseTCzUJxRHxg5cH28zorRAejlY0h7wbR8/edit?usp=sharing"> Here</a>re you can find a list of my favorite places around the world.
