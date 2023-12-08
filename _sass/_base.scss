@@ -623,7 +623,7 @@ footer.sticky-bottom {
         a.code {
           font-size: small;
           color: white;
-          background-color: #{$pink-color-light};
+          background-color: #{$yellow-color};
           padding-left: 1rem;
           padding-right: 1rem;
           padding-top: 0.25rem;
@@ -690,6 +690,7 @@ footer.sticky-bottom {
       div.abstract.hidden {
         border: dashed 1px var(--global-bg-color);
         margin-top: 15px;
+        margin-bottom: 15px;
       }
       div.abstract.hidden.open {
         border-color: var(--global-text-color);
