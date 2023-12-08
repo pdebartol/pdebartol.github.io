@@ -604,6 +604,7 @@ footer.sticky-bottom {
           &:hover {
             color: black;
             border: dashed 1px var(--global-text-color);
+            padding-bottom: 0.25rem;
           }
         }
         a.blog {
