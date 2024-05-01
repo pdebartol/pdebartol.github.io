@@ -8,16 +8,6 @@ nav: true
 nav_order: 1
 ---
 
-#### preprints
-<!-- _pages/publications.md -->
-<div class="publications">
-
-{%- for y in page.years %}
-  {% bibliography -f preprints -q @*[year={{y}}]* %}
-{% endfor %}
-
-</div>
-
 #### publications
 <!-- _pages/publications.md -->
 <div class="publications">
