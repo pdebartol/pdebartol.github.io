@@ -10,7 +10,14 @@
 We propose a novel strategy to benchmark observational studies beyond the average treatment effect. First, we design a statistical test for the null hypothesis that the treatment effects, conditioned on a set of relevant features, differ up to some tolerance. We then estimate an asymptotically valid lower bound on the maximum bias strength for any subgroup in the observational study.  Finally, we validate our benchmarking strategy in a real-world setting and show that it leads to conclusions that align with established medical knowledge.}
 }
 
-
+@article{de2025doubly,
+      title={Doubly robust identification of treatment effects from multiple environments}, 
+      author={ Piersilvio De Bartolomeis and Julia Kostin and Javier Abad and  Yixin Wang and Fanny Yang},
+      year={2025},
+     conference={International Conference on Learning Representations (ICLR),},
+    pdf={https://openreview.net/pdf?id=9vTAkJ9Tik},
+     abstract={Practical and ethical constraints often dictate the use of observational data for causal inference, particularly in medicine and social sciences. Yet, observational datasets are prone to confounding, potentially compromising the validity of conclusions. While adjusting for all available covariates is a common corrective strategy, this approach can introduce bias, especially when post-treatment variables are present or some variables remain unobserved—a frequent scenario in practice. Avoiding this bias often requires detailed knowledge of the underlying causal graph, a challenging and often impractical prerequisite. In this work, we propose RAMEN, an algorithm that tackles this challenge by leveraging the heterogeneity of multiple data sources without the need to know the complete causal graph. Notably, RAMEN achieves doubly robust identification: we identify the treatment effect if either the causal parents of the treatment or those of the outcome are observed. Empirical evaluations across synthetic, semi-synthetic, and real-world datasets show that our approach significantly outperforms existing methods.}
+}
 
 
 @article{debartolomeis2023hidden,
