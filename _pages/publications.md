@@ -7,6 +7,14 @@ years: [2025, 2024, 2023, 2022]
 nav: true
 nav_order: 1
 ---
+#### preprints
+<div class="publications">
+
+{%- for y in page.years %}
+  {% bibliography -f preprints -q @*[year={{y}}]* %}
+{% endfor %}
+
+</div>
 
 #### publications
 <!-- _pages/publications.md -->
