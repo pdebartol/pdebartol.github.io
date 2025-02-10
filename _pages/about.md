@@ -15,7 +15,7 @@ social: true  # includes social icons at the bottom of the page
 ---
 
 
-I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a>. During my graduate studies, I was a visiting researcher in the <a href="https://causalab.sph.harvard.edu/"> CAUSALab</a> at Harvard University, hosted by <a href="https://www.hsph.harvard.edu/profile/issa-dahabreh/">Issa Dahabreh</a>. Prior to that, I earned a Data Science M.Sc. at ETH Zürich, with a strong focus on statistics and machine learning. 
+I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a href="https://sml.inf.ethz.ch/group/fannyy/"> Fanny Yang</a>. During my studies, I was a visiting graduate student at Harvard University, hosted by <a href="https://www.hsph.harvard.edu/profile/issa-dahabreh/">Issa Dahabreh</a> in the <a href="https://causalab.sph.harvard.edu/"> CAUSALab</a>. Prior to that, I earned a Data Science M.Sc. at ETH Zürich, with a strong focus on statistics and machine learning. 
 
 I am broadly interested in the foundations of causality and its healthcare applications. Currently, I am working on improving the efficiency of randomized experiments by integrating foundation models trained on external data sources; see, e.g., <a href="https://arxiv.org/pdf/2502.04262">our latest work</a>. If you are a student interested in working with me, feel free to reach out.
 
