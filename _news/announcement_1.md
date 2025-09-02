@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2022-09-15 15:59:00-0400
+date: 2025-08-29 15:59:00-0400
 inline: true
 ---
 
-Our paper titled "<a href="https://arxiv.org/abs/2202.01511">Challenging Common Assumptions in Convex Reinforcement Learning</a>" has been accepted for presentation at NeurIPS 2022.
+Our paper titled <a href="https://arxiv.org/pdf/2406.17971">Robust integration of external control data in randomized trials</a> has been accepted for publication in <a href="https://academic.oup.com/biometrics/issue">Biometrics</a>. It has also been selected for a Discussion, where invited experts will provide their perspectives on our work.
