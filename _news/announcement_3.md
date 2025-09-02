@@ -1,7 +1,6 @@
 ---
 layout: post
-date: 2022-10-20 15:59:00-0400
+date: 2025-05-09 15:59:00-0400
 inline: true
 ---
-Our paper titled "Why certified defences hurt robust generalisation” has been accepted as a contributed talk at the NeurIPS 2022 workshop on <a href="https://sites.google.com/view/icbinb-2022/home">Understanding Deep Learning Through Empirical Falsification</a>.
-
+I have been invited to present my work <a href="https://arxiv.org/abs/2502.04262">Efficient Randomized Experiments Using Foundation Models</a> at the <a href="https://carswg.github.io/journalclub/journalclub12.html">American Statistical Association Covariate Adjustment Working Group</a>. This group brings together statisticians from both academia and pharma companies. The slides from my talk can be found <a href="https://pdebartol.github.io/assets/pdf/presentation_haipw.pdf">here</a>.
