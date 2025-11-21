@@ -2,20 +2,33 @@
 async function loadPublications() {
     try {
         // Load bib files
-        console.log('Parsing papers.bib...');
+        console.log('Loading bibliography files...');
         const [papersResponse, preprintsResponse] = await Promise.all([
-            fetch('_bibliography/papers.bib'),
-            fetch('_bibliography/preprints.bib')
+            fetch('bibliography/papers.bib'),
+            fetch('bibliography/preprints.bib')
         ]);
+
+        // Check if responses are OK
+        if (!papersResponse.ok) {
+            throw new Error(`Failed to load papers.bib: ${papersResponse.status} ${papersResponse.statusText}`);
+        }
+        if (!preprintsResponse.ok) {
+            throw new Error(`Failed to load preprints.bib: ${preprintsResponse.status} ${preprintsResponse.statusText}`);
+        }
 
         const papersText = await papersResponse.text();
         const preprintsText = await preprintsResponse.text();
 
+        console.log('Papers text length:', papersText.length);
+        console.log('Preprints text length:', preprintsText.length);
+
         // Parse BibTeX entries
         const papers = parseBibTeX(papersText);
+        console.log('Parsed papers:', papers.length, 'entries');
         console.log('Parsed papers keys:', papers.map(p => p.key));
 
         const preprints = parseBibTeX(preprintsText);
+        console.log('Parsed preprints:', preprints.length, 'entries');
 
         // Organize papers by year
         const papersByYear = {};
@@ -32,6 +45,12 @@ async function loadPublications() {
 
     } catch (error) {
         console.error('Error loading publications:', error);
+        // Display error to user
+        const preprintsContainer = document.getElementById('preprints-container');
+        const publicationsContainer = document.getElementById('publications-container');
+        const errorMsg = `<p style="color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 8px;">Error loading publications: ${error.message}</p>`;
+        if (preprintsContainer) preprintsContainer.innerHTML = errorMsg;
+        if (publicationsContainer) publicationsContainer.innerHTML = errorMsg;
     }
 }
 
