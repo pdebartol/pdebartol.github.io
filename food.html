@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recommendations</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-logo">Piersilvio De Bartolomeis</div>
+        <div class="nav-links">
+            <a href="index.html">About</a>
+            <a href="research.html">Research</a>
+            <a href="food.html" class="active">Food</a>
+        </div>
+    </nav>
+    <div class="page-container page-container-wide">
+        <p class="page-subtitle" style="margin-bottom: 2rem; color: #666;">A curated collection of my favorite dining
+            spots.</p>
+
+        <!-- Admin Panel -->
+        <section id="adminPanel" class="admin-panel" hidden>
+            <div class="admin-panel__header">
+                <div>
+                    <h3>Content Manager</h3>
+                    <p>Update your restaurants directly from this page.</p>
+                </div>
+                <button id="closeAdmin" type="button" class="ghost-btn">Close</button>
+            </div>
+
+            <div class="admin-grid">
+                <form id="restaurantForm" class="admin-form">
+                    <input type="hidden" id="restaurantId">
+                    <div class="form-row">
+                        <label>
+                            Name
+                            <input type="text" id="nameInput" required>
+                        </label>
+                        <label>
+                            Cuisine
+                            <input type="text" id="cuisineInput" placeholder="e.g. italian" required>
+                        </label>
+                        <label>
+                            Price
+                            <select id="priceInput" required>
+                                <option value="$">$</option>
+                                <option value="$$">$$</option>
+                                <option value="$$$">$$$</option>
+                                <option value="$$$$">$$$$</option>
+                            </select>
+                        </label>
+                        <label>
+                            Rating
+                            <input type="number" id="ratingInput" min="1" max="5" step="0.1" required>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            Location
+                            <input type="text" id="locationInput" placeholder="City, Country" required>
+                        </label>
+                        <label>
+                            Google Maps URL
+                            <input type="text" id="mapInput" placeholder="https://g.co/kgs/...">
+                        </label>
+                    </div>
+
+                    <label>
+                        Photo (URL or images/...)
+                        <input type="text" id="photoInput" placeholder="images/villa-crespi.jpg">
+                    </label>
+
+
+                    <label>
+                        Recommended Dish
+                        <textarea id="descriptionInput" rows="2" required></textarea>
+                    </label>
+
+                    <label>
+                        Notes
+                        <textarea id="notesInput" rows="3" placeholder="Extra tips..."></textarea>
+                    </label>
+
+                    <label>
+                        Category
+                        <select id="categoryInput" required>
+                            <option value="selected">Selected Places</option>
+                            <option value="honorable">Honorable Mentions</option>
+                            <option value="hidden">Hidden (Not Shown)</option>
+                        </select>
+                    </label>
+
+                    <!-- Image Selector -->
+                    <div id="imageSelector" class="image-selector" style="display: none;">
+                        <label>Select Cover Photo</label>
+                        <div id="selectorGrid" class="selector-grid"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">Save Restaurant</button>
+                        <button type="button" id="resetForm" class="ghost-btn">Clear</button>
+                    </div>
+                </form>
+
+                <div class="admin-list">
+                    <div class="admin-list__header">
+                        <h4>Current Restaurants</h4>
+                        <div class="admin-actions">
+                            <button id="exportData" type="button" class="ghost-btn">Export JSON</button>
+                            <label class="ghost-btn file-label">
+                                Import JSON
+                                <input id="importData" type="file" accept="application/json">
+                            </label>
+                            <button id="resetData" type="button" class="ghost-btn danger">Reset to Default</button>
+                        </div>
+                    </div>
+                    <div id="adminList" class="admin-list__items"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="selected">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                Selected Places
+            </button>
+            <button class="view-btn" data-view="honorable">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="7"></circle>
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+                Honorable Mentions
+            </button>
+        </div>
+
+        <!-- Restaurant Grid -->
+        <div id="restaurantGrid" class="restaurant-grid">
+            <!-- Restaurants will be dynamically inserted here -->
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No restaurants found. Try adjusting your filters!</p>
+        </div>
+    </div>
+
+    <!-- Carousel Modal -->
+    <div id="carouselModal" class="carousel-modal">
+        <div class="carousel-container">
+            <button class="carousel-close" onclick="closeCarousel()">&times;</button>
+            <button class="carousel-nav carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
+            <div class="carousel-content">
+                <div class="carousel-slide">
+                    <img id="carouselImage" src="" alt="Restaurant media">
+                    <video id="carouselVideo" controls style="display:none;"></video>
+                </div>
+                <div class="carousel-caption" id="carouselCaption"></div>
+            </div>
+            <button class="carousel-nav carousel-next" onclick="changeSlide(1)">&#10095;</button>
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+    </div>
+
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Piersilvio De Bartolomeis. All rights reserved.</p>
+        <p class="vibecode-credit">Vibe coded using Antigravity.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piersilvio De Bartolomeis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <div class="nav-logo">Piersilvio De Bartolomeis</div>
+        <div class="nav-links">
+            <a href="index.html" class="active">About</a>
+            <a href="research.html">Research</a>
+            <a href="food.html">Food</a>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="bio-profile-container">
+            <section class="content-section bio-text">
+                <p>I am a PhD student in the Computer Science Department at ETH Zürich, advised by <a
+                        href="https://sml.inf.ethz.ch/group/fannyy/">Fanny Yang</a>, and part of the <a
+                        href="https://ml.inf.ethz.ch/">Institute for Machine Learning</a>. I was previously an Applied
+                    Scientist Intern at <a href="https://www.amazon.science/">Amazon Science</a> in Seattle, where I
+                    worked
+                    on machine learning and experimentation to select the best offers for customers. Before that, I
+                    was a visiting graduate student at Harvard University, hosted by <a
+                        href="https://www.hsph.harvard.edu/profile/issa-dahabreh/">Issa Dahabreh</a> in the <a
+                        href="https://causalab.sph.harvard.edu/">CAUSALab</a>.</p>
+
+                <p>I am broadly interested in reliable decision-making from multiple heterogeneous data sources. For
+                    example, leveraging AI models to combine randomized and observational evidence with the goal of
+                    improving efficiency and generalization.</p>
+
+                <p>My current research focuses on <em>trial augmentation</em>, a framework that improves clinical-trial
+                    efficiency by safely incorporating external data through flexible AI models. A key advantage of
+                    this framework is that it preserves the rigor of randomization while leveraging real-world evidence
+                    to yield more precise estimates.
+                </p>
+            </section>
+
+            <div class="profile-section">
+                <img src="prof_pic.png" alt="Piersilvio De Bartolomeis" class="profile-pic">
+                <div class="social-links-icons">
+                    <a href="https://twitter.com/pdebartols" target="_blank" aria-label="X (formerly Twitter)"
+                        title="X">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/piersilvio-de-bartolomeis-19aa67170" target="_blank"
+                        aria-label="LinkedIn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=YtoJ9mQAAAAJ&hl=it" target="_blank"
+                        aria-label="Google Scholar" title="Google Scholar">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path
+                                d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z" />
+                        </svg>
+                    </a>
+                    <a href="mailto:pdebartol@ethz.ch" aria-label="Email" title="Email">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path
+                                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <section class="content-section">
+            <h2>Selected Publications</h2>
+
+            <div class="publication-item">
+                <a href="https://arxiv.org/abs/2502.04262" class="publication-title">Efficient Randomized Experiments
+                    Using Foundation Models</a>
+                <div class="publication-authors">Piersilvio De Bartolomeis, Javier Abad, Guanbo Wang, Konstantin
+                    Donhauser, Raymond M. Duch, Fanny Yang, and Issa J. Dahabreh</div>
+                <div class="publication-meta">Advances in Neural Information Processing Systems (NeurIPS), 2025</div>
+            </div>
+
+            <div class="publication-item">
+                <a href="https://ai.nejm.org/stoken/default+domain/D4DNMNHQMDXQGPPQUV4P/full?redirectUri=doi/full/10.1056/AIe2500894"
+                    class="publication-title">Trial Emulation, Simulation, and Augmentation Using Electronic Health
+                    Records and Generative AI</a>
+                <div class="publication-authors">Issa J. Dahabreh, Robert W. Yeh, and Piersilvio De Bartolomeis</div>
+                <div class="publication-meta">NEJM AI, 2025</div>
+            </div>
+
+            <div class="publication-item">
+                <a href="https://arxiv.org/abs/2312.03871" class="publication-title">Hidden Yet Quantifiable: A Lower
+                    Bound for Confounding Strength Using Randomized Trials</a>
+                <div class="publication-authors">Piersilvio De Bartolomeis*, Javier Abad*, Konstantin Donhauser, and
+                    Fanny Yang</div>
+                <div class="publication-meta">International Conference on Artificial Intelligence and Statistics
+                    (AISTATS), 2024</div>
+            </div>
+
+        </section>
+
+        <section class="content-section">
+            <h2>News</h2>
+            <ul class="news-list">
+                <li><strong>August 2025</strong> — Our paper <a href="https://arxiv.org/abs/2406.17971">Robust
+                        integration of external control data in randomized trials</a> has been accepted for publication
+                    in <a href="https://academic.oup.com/biometrics/issue">Biometrics</a>. Moreover, it has
+                    been selected for a discussion where leading experts will share their perspectives on our
+                    contribution.</li>
+                <li><strong>July 2025</strong> — Our workshop <a href="https://sites.google.com/view/causcien">CauScien:
+                        Uncovering Causality in Science</a> has been accepted at <a
+                        href="https://neurips.cc/virtual/2025/workshop/109550">NeurIPS</a> 2025!</li>
+                <li><strong>May 2025</strong> — I have been invited to present our paper <a
+                        href="https://arxiv.org/abs/2502.04262">Efficient Randomized Experiments Using Foundation
+                        Models</a> at the <a href="https://carswg.github.io/journalclub/journalclub12.html">American
+                        Statistical Association Covariate Adjustment Group</a>, which brings together statisticians from
+                    academia and pharma. The slides can be found <a href="_assets/presentation_haipw.pdf">here</a>.</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Piersilvio De Bartolomeis. All rights reserved.</p>
+        <p class="vibecode-credit">Vibe coded using Antigravity.</p>
+    </footer>
+</body>
+
+</html>
