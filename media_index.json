@@ -73,6 +73,28 @@
   "da-michele": [
     "images/da-michele/media-1.jpg"
   ],
+  "da-vittorio": [
+    "images/da-vittorio/IMG_3816.jpeg",
+    "images/da-vittorio/IMG_3857.jpeg",
+    "images/da-vittorio/IMG_3858.jpeg",
+    "images/da-vittorio/IMG_3860.jpeg",
+    "images/da-vittorio/IMG_3861.jpeg",
+    "images/da-vittorio/IMG_3862.jpeg",
+    "images/da-vittorio/IMG_3864.jpeg",
+    "images/da-vittorio/IMG_3866.jpeg",
+    "images/da-vittorio/IMG_3868.jpeg",
+    "images/da-vittorio/IMG_3869.jpeg",
+    "images/da-vittorio/IMG_3870.jpeg",
+    "images/da-vittorio/IMG_3871.jpeg",
+    "images/da-vittorio/IMG_3873.jpeg",
+    "images/da-vittorio/IMG_3908.jpeg",
+    "images/da-vittorio/IMG_3909.jpeg",
+    "images/da-vittorio/IMG_3910.jpeg",
+    "images/da-vittorio/IMG_3911.jpeg",
+    "images/da-vittorio/IMG_3915.jpeg",
+    "images/da-vittorio/IMG_3919.jpeg",
+    "images/da-vittorio/IMG_3921.jpeg"
+  ],
   "din-tai-fung": [
     "images/din-tai-fung/media-1.jpg",
     "images/din-tai-fung/media-2.jpg",
@@ -225,6 +247,10 @@
     "images/mensho-tokyo-sf/media-1.jpg",
     "images/mensho-tokyo-sf/media-2.jpg",
     "images/mensho-tokyo-sf/media-3.jpg"
+  ],
+  "menya-hosaki": [
+    "images/menya-hosaki/IMG_4050.jpeg",
+    "images/menya-hosaki/IMG_4052.jpeg"
   ],
   "mimi-alla-ferrovia": [
     "images/mimi-alla-ferrovia/media-1.jpg",
@@ -455,7 +481,8 @@
     "images/tonchin/media-2.jpg",
     "images/tonchin/media-3.jpg",
     "images/tonchin/media-4.jpg",
-    "images/tonchin/media-5.jpg"
+    "images/tonchin/media-5.jpg",
+    "images/tonchin/media-6.jpeg"
   ],
   "tsune-sushi": [
     "images/tsune-sushi/media-1.jpg",

@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 // =========================================
 async function loadMediaIndex() {
     try {
-        const response = await fetch('media_index.json');
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(`media_index.json?v=${cacheBuster}`);
         if (!response.ok) {
             console.warn('Could not load media_index.json, carousel will not work');
             return;
@@ -51,40 +52,30 @@ async function loadMediaIndex() {
 // =========================================
 async function loadRestaurantData() {
     try {
-        // Try to load from localStorage first
-        const savedSelected = localStorage.getItem('food_rec_selected_places');
-        const savedDayToDay = localStorage.getItem('food_rec_day_to_day');
-        const savedHonorable = localStorage.getItem('food_rec_honorable_mentions');
-        const savedHidden = localStorage.getItem('food_rec_hidden_restaurants');
+        // Always load from JSON files with cache-busting to ensure fresh data
+        const cacheBuster = new Date().getTime();
+        const [selectedResponse, dayToDayResponse, honorableResponse, casualResponse] = await Promise.all([
+            fetch(`selected_places.json?v=${cacheBuster}`),
+            fetch(`day_to_day.json?v=${cacheBuster}`),
+            fetch(`honorable_mentions.json?v=${cacheBuster}`),
+            fetch(`casual.json?v=${cacheBuster}`)
+        ]);
 
-        if (savedSelected && savedDayToDay && savedHonorable) {
-            selectedPlaces = JSON.parse(savedSelected);
-            dayToDayPlaces = JSON.parse(savedDayToDay);
-            honorableMentions = JSON.parse(savedHonorable);
-            hiddenRestaurants = savedHidden ? JSON.parse(savedHidden) : [];
-            console.log('Loaded from localStorage');
+        if (selectedResponse.ok && dayToDayResponse.ok && honorableResponse.ok && casualResponse.ok) {
+            selectedPlaces = await selectedResponse.json();
+            dayToDayPlaces = await dayToDayResponse.json();
+            honorableMentions = await honorableResponse.json();
+            const casualPlaces = await casualResponse.json();
+            // Merge casual into dayToDayPlaces for now, or create a separate array
+            // For simplicity, let's use dayToDayPlaces as casual
+            dayToDayPlaces = casualPlaces;
+            hiddenRestaurants = [];
+            console.log('Loaded from JSON files');
         } else {
-            // Load from JSON files
-            const [selectedResponse, dayToDayResponse, honorableResponse] = await Promise.all([
-                fetch('selected_places.json'),
-                fetch('day_to_day.json'),
-                fetch('honorable_mentions.json')
-            ]);
-
-            if (selectedResponse.ok && dayToDayResponse.ok && honorableResponse.ok) {
-                selectedPlaces = await selectedResponse.json();
-                dayToDayPlaces = await dayToDayResponse.json();
-                honorableMentions = await honorableResponse.json();
-                hiddenRestaurants = [];
-                // Save to localStorage for future use
-                saveRestaurants();
-                console.log('Loaded from JSON files');
-            } else {
-                console.error('Failed to load restaurant data');
-            }
+            console.error('Failed to load restaurant data');
         }
 
-        console.log(`Loaded ${selectedPlaces.length} selected places, ${honorableMentions.length} honorable mentions, ${hiddenRestaurants.length} hidden, and ${dayToDayPlaces.length} day-to-day places`);
+        console.log(`Loaded ${selectedPlaces.length} selected places, ${honorableMentions.length} honorable mentions, ${hiddenRestaurants.length} hidden, and ${dayToDayPlaces.length} casual places`);
     } catch (err) {
         console.error('Error loading restaurant data:', err);
     }
@@ -105,7 +96,16 @@ function renderRestaurants() {
     grid.innerHTML = '';
 
     // Select the appropriate data source based on current view
-    const restaurants = currentView === 'selected' ? selectedPlaces : honorableMentions;
+    let restaurants;
+    if (currentView === 'selected') {
+        restaurants = selectedPlaces;
+    } else if (currentView === 'honorable') {
+        restaurants = honorableMentions;
+    } else if (currentView === 'casual') {
+        restaurants = dayToDayPlaces;
+    } else {
+        restaurants = selectedPlaces;
+    }
 
     // Show grid, hide map for other views
     grid.style.display = 'grid';
@@ -278,22 +278,46 @@ function setupEventListeners() {
         });
     });
 
-    document.getElementById('adminToggle').addEventListener('click', () => {
-        const panel = document.getElementById('adminPanel');
-        panel.hidden = !panel.hidden;
-    });
+    const adminToggle = document.getElementById('adminToggle');
+    if (adminToggle) {
+        adminToggle.addEventListener('click', () => {
+            const panel = document.getElementById('adminPanel');
+            panel.hidden = !panel.hidden;
+        });
+    }
 
-    document.getElementById('closeAdmin').addEventListener('click', () => {
-        document.getElementById('adminPanel').hidden = true;
-        resetForm();
-    });
+    const closeAdmin = document.getElementById('closeAdmin');
+    if (closeAdmin) {
+        closeAdmin.addEventListener('click', () => {
+            document.getElementById('adminPanel').hidden = true;
+            resetForm();
+        });
+    }
 
-    document.getElementById('restaurantForm').addEventListener('submit', handleFormSubmit);
-    document.getElementById('resetForm').addEventListener('click', resetForm);
+    const restaurantForm = document.getElementById('restaurantForm');
+    if (restaurantForm) {
+        restaurantForm.addEventListener('submit', handleFormSubmit);
+    }
 
-    document.getElementById('exportData').addEventListener('click', exportData);
-    document.getElementById('importData').addEventListener('change', importData);
-    document.getElementById('resetData').addEventListener('click', resetData);
+    const resetFormBtn = document.getElementById('resetForm');
+    if (resetFormBtn) {
+        resetFormBtn.addEventListener('click', resetForm);
+    }
+
+    const exportDataBtn = document.getElementById('exportData');
+    if (exportDataBtn) {
+        exportDataBtn.addEventListener('click', exportData);
+    }
+
+    const importDataInput = document.getElementById('importData');
+    if (importDataInput) {
+        importDataInput.addEventListener('change', importData);
+    }
+
+    const resetDataBtn = document.getElementById('resetData');
+    if (resetDataBtn) {
+        resetDataBtn.addEventListener('click', resetData);
+    }
 
     // Keyboard navigation for carousel
     document.addEventListener('keydown', (e) => {
