@@ -17,6 +17,7 @@ let currentSlideIndex = 0;
 let currentRestaurantMedia = [];
 let editingRestaurantName = null;
 let currentView = 'selected'; // 'selected', 'honorable', or 'everyday'
+let currentCityFilter = 'all'; // Track the selected city filter
 
 // =========================================
 // Initialization
@@ -24,6 +25,7 @@ let currentView = 'selected'; // 'selected', 'honorable', or 'everyday'
 document.addEventListener('DOMContentLoaded', async () => {
     await loadMediaIndex();
     await loadRestaurantData();
+    populateCityFilter();
     renderRestaurants();
     setupEventListeners();
     setupAdminPanel();
@@ -82,6 +84,60 @@ async function loadRestaurantData() {
 }
 
 // =========================================
+// City Filter Functions
+// =========================================
+function populateCityFilter() {
+    const cityFilter = document.getElementById('cityFilter');
+    if (!cityFilter) return;
+
+    // Get current restaurants based on view
+    let restaurants;
+    if (currentView === 'selected') {
+        restaurants = selectedPlaces;
+    } else if (currentView === 'honorable') {
+        restaurants = honorableMentions;
+    } else if (currentView === 'casual') {
+        restaurants = dayToDayPlaces;
+    } else {
+        restaurants = selectedPlaces;
+    }
+
+    // Extract unique cities from the location field
+    const cities = new Set();
+    restaurants.forEach(r => {
+        if (r.location) {
+            // Extract city from "City, Country" format
+            const city = r.location.split(',')[0].trim();
+            cities.add(city);
+        }
+    });
+
+    // Sort cities alphabetically
+    const sortedCities = Array.from(cities).sort();
+
+    // Save current selection
+    const currentSelection = cityFilter.value;
+
+    // Clear and repopulate the dropdown
+    cityFilter.innerHTML = '<option value="all">All Cities</option>';
+    sortedCities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        cityFilter.appendChild(option);
+    });
+
+    // Restore selection if it still exists, otherwise reset to 'all'
+    if (sortedCities.includes(currentSelection)) {
+        cityFilter.value = currentSelection;
+        currentCityFilter = currentSelection;
+    } else {
+        cityFilter.value = 'all';
+        currentCityFilter = 'all';
+    }
+}
+
+// =========================================
 // Map Functions
 // =========================================
 
@@ -110,8 +166,15 @@ function renderRestaurants() {
     // Show grid, hide map for other views
     grid.style.display = 'grid';
 
-    // Use all restaurants without filtering
+    // Filter by city if a city is selected
     let filtered = restaurants;
+    if (currentCityFilter !== 'all') {
+        filtered = filtered.filter(r => {
+            // Extract city from location (format: "City, Country")
+            const city = r.location.split(',')[0].trim();
+            return city === currentCityFilter;
+        });
+    }
 
     if (filtered.length === 0) {
         noResults.style.display = 'block';
@@ -274,9 +337,19 @@ function setupEventListeners() {
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentView = btn.dataset.view;
+            populateCityFilter();
             renderRestaurants();
         });
     });
+
+    // City filter
+    const cityFilter = document.getElementById('cityFilter');
+    if (cityFilter) {
+        cityFilter.addEventListener('change', (e) => {
+            currentCityFilter = e.target.value;
+            renderRestaurants();
+        });
+    }
 
     const adminToggle = document.getElementById('adminToggle');
     if (adminToggle) {
