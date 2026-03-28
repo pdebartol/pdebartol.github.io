@@ -33,8 +33,7 @@
     --space-2xl: 3rem;
 
     /* Typography */
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
+    --font-primary: 'Source Serif 4', serif;
 
     /* Effects */
     --radius-sm: 4px;
@@ -56,11 +55,18 @@
 }
 
 body {
-    font-family: var(--font-body);
+    font-family: var(--font-primary);
     background-color: var(--bg-body);
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
 .container {
@@ -78,7 +84,6 @@ body {
 }
 
 .title {
-    font-family: var(--font-heading);
     font-size: 3.5rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -121,7 +126,6 @@ body {
 .search-input {
     width: 100%;
     padding: var(--space-md) var(--space-md) var(--space-md) 3rem;
-    font-family: var(--font-body);
     font-size: 1rem;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-full);
@@ -145,7 +149,6 @@ body {
 
 .filter-select {
     padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--text-secondary);
     background: var(--bg-surface);
@@ -187,7 +190,6 @@ body {
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -222,7 +224,6 @@ body {
 
 .city-filter-select {
     padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--text-secondary);
     background: var(--bg-surface);
@@ -336,7 +337,6 @@ body {
 }
 
 .restaurant-name {
-    font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -472,7 +472,6 @@ body {
 }
 
 .admin-panel__header h3 {
-    font-family: var(--font-heading);
     font-size: 1.5rem;
     color: var(--text-primary);
 }
@@ -499,7 +498,6 @@ body {
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-sm);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     transition: var(--transition);
 }
@@ -696,7 +694,6 @@ body {
 .carousel-caption {
     margin-top: 1rem;
     color: rgba(255, 255, 255, 0.9);
-    font-family: var(--font-heading);
     font-size: 1.1rem;
     text-align: center;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -877,11 +874,7 @@ body {
 
 .leaflet-popup-content-wrapper {
     border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-}
-
-.leaflet-popup-content h3 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-primary);
 }
 
 /* Navigation Styles */
@@ -892,11 +885,9 @@ body {
     padding: 2rem 5%;
     max-width: 1400px;
     margin: 0 auto;
-    font-family: 'Inter', sans-serif;
 }
 
 .nav-logo {
-    font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -924,7 +915,6 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 5%;
-    font-family: 'Inter', sans-serif;
     line-height: 1.6;
     color: var(--text-primary);
 }
@@ -934,7 +924,6 @@ body {
 }
 
 .page-title {
-    font-family: 'Playfair Display', serif;
     font-size: 3rem;
     margin-bottom: 1rem;
     color: var(--text-primary);
@@ -950,7 +939,6 @@ body {
 }
 
 .content-section h2 {
-    font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
@@ -1011,6 +999,7 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    font-family: inherit;
 }
 
 .news-list li {
@@ -1158,63 +1147,6 @@ body {
 .vibecode-credit {
     font-style: italic;
     color: #888;
-}
-
-/* Sora Font Override */
-body,
-.main-nav,
-.nav-logo,
-.nav-links,
-.page-container,
-.content-section,
-.content-section h2,
-.content-section p,
-.publication-item,
-.publication-title,
-.publication-authors,
-.publication-meta,
-.publication-links,
-.news-list,
-.site-footer {
-    font-family: 'Sora', sans-serif;
-}
-
-/* Remove Playfair Display references */
-.page-title,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Sora', sans-serif;
-}
-
-/* Revert to Inter and Playfair Display */
-body,
-.main-nav,
-.nav-links,
-.page-container,
-.content-section p,
-.publication-authors,
-.publication-meta,
-.publication-links,
-.news-list,
-.site-footer {
-    font-family: 'Inter', sans-serif;
-}
-
-.nav-logo,
-.page-title,
-.content-section h2,
-.publication-title,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Playfair Display', serif;
 }
 
 /* Enhanced Link Visibility */

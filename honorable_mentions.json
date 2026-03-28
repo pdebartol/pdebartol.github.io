@@ -254,5 +254,19 @@
         "lat": 45.4642,
         "lng": 9.19,
         "hiddenImages": []
+    },
+    {
+        "name": "Yat Tung Heen",
+        "cuisine": "chinese",
+        "price": "$$",
+        "rating": 4,
+        "description": "Dim sum and Cantonese classics",
+        "location": "Hong Kong, China",
+        "notes": "",
+        "map": "https://share.google/4zZi5hTxn9r79ilyi",
+        "photo": "images/Yat-tung-heen/IMG_4353.JPEG",
+        "lat": 22.3078,
+        "lng": 114.1715,
+        "hiddenImages": []
     }
 ]

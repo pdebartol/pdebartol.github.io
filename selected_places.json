@@ -154,5 +154,19 @@
         "lat": 35.6762,
         "lng": 139.6503,
         "hiddenImages": []
+    },
+    {
+        "name": "Yamamoto Menzou",
+        "cuisine": "japanese",
+        "price": "$",
+        "rating": 5,
+        "description": "Beef burdock udon",
+        "location": "Kyoto, Japan",
+        "notes": "",
+        "map": "https://share.google/zTEVUwLmHAZ8on0iQ",
+        "photo": "images/yamamoto-menzou/media-1.JPEG",
+        "lat": 35.0116,
+        "lng": 135.7681,
+        "hiddenImages": []
     }
 ]
