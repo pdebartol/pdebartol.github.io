@@ -223,6 +223,28 @@ function renderRestaurants() {
     });
 }
 
+function getRestaurantMediaKey(restaurant) {
+    const nameSlug = restaurant.name.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    if (nameSlug && mediaIndex[nameSlug]) {
+        return nameSlug;
+    }
+
+    if (restaurant.photo) {
+        const photoParts = restaurant.photo.split('/');
+        if (photoParts.length >= 3) {
+            const folderSlug = photoParts[1];
+            if (mediaIndex[folderSlug]) {
+                return folderSlug;
+            }
+        }
+    }
+
+    return nameSlug;
+}
+
 // =========================================
 // Carousel Functions
 // =========================================
@@ -236,12 +258,8 @@ function openCarousel(restaurantName) {
         return;
     }
 
-    // Sanitize restaurant name to match folder name
-    const sanitized = restaurant.name.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-
-    currentRestaurantMedia = mediaIndex[sanitized] || [restaurant.photo];
+    const mediaKey = getRestaurantMediaKey(restaurant);
+    currentRestaurantMedia = mediaIndex[mediaKey] || [restaurant.photo];
 
     // Filter out hidden images
     if (restaurant.hiddenImages && restaurant.hiddenImages.length > 0) {
@@ -467,10 +485,8 @@ function editRestaurant(name) {
     document.getElementById('categoryInput').value = category;
 
     // Show image selector if available
-    const sanitized = restaurant.name.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    const media = mediaIndex[sanitized];
+    const mediaKey = getRestaurantMediaKey(restaurant);
+    const media = mediaIndex[mediaKey];
 
     const selector = document.getElementById('imageSelector');
     const grid = document.getElementById('selectorGrid');

@@ -34,6 +34,9 @@
     "images/barceloneta/media-2.jpg",
     "images/barceloneta/media-3.jpg"
   ],
+  "biu-biu-mala-tang": [
+    "images/biu-biu-mala-tang/media-1.JPEG"
+  ],
   "batong": [
     "images/batong/media-1.jpg",
     "images/batong/media-2.jpg",
@@ -198,6 +201,14 @@
     "images/kodawari-ramen/media-5.jpg",
     "images/kodawari-ramen/media-6.jpg"
   ],
+  "kunitoraya-paris": [
+    "images/kunitoraya-paris/media-1.JPEG",
+    "images/kunitoraya-paris/media-2.JPEG",
+    "images/kunitoraya-paris/media-3.JPEG",
+    "images/kunitoraya-paris/media-4.JPEG",
+    "images/kunitoraya-paris/media-5.JPEG",
+    "images/kunitoraya-paris/media-6.JPEG"
+  ],
   "la-dong": [
     "images/la-dong/media-1.jpg",
     "images/la-dong/media-2.jpg",
@@ -251,6 +262,10 @@
   "menya-hosaki": [
     "images/menya-hosaki/IMG_4050.jpeg",
     "images/menya-hosaki/IMG_4052.jpeg"
+  ],
+  "ramen-matsui": [
+    "images/ramen-matsui/media-1.JPEG",
+    "images/ramen-matsui/media-2.JPEG"
   ],
   "mimi-alla-ferrovia": [
     "images/mimi-alla-ferrovia/media-1.jpg",
@@ -348,6 +363,13 @@
     "images/ramen-free-birds/media-2.jpg",
     "images/ramen-free-birds/media-3.jpg"
   ],
+  "ramen-hachiyo": [
+    "images/ramen-hachiyo/media-1.JPEG",
+    "images/ramen-hachiyo/media-2.JPEG",
+    "images/ramen-hachiyo/media-3.JPEG",
+    "images/ramen-hachiyo/media-4.JPEG",
+    "images/ramen-hachiyo/media-5.JPEG"
+  ],
   "ramen-hosenka": [
     "images/ramen-hosenka/media-1.jpg",
     "images/ramen-hosenka/media-2.jpg",
@@ -436,6 +458,16 @@
     "images/tempura-miyashiro/media-7.jpg",
     "images/tempura-miyashiro/media-8.jpg",
     "images/tempura-miyashiro/media-9.jpg"
+  ],
+  "tempura-fukamachi": [
+    "images/tempura-fukamachi/media-1.JPEG",
+    "images/tempura-fukamachi/media-2.JPEG",
+    "images/tempura-fukamachi/media-3.JPEG",
+    "images/tempura-fukamachi/media-4.JPEG",
+    "images/tempura-fukamachi/media-5.JPEG",
+    "images/tempura-fukamachi/media-6.JPEG",
+    "images/tempura-fukamachi/media-7.JPEG",
+    "images/tempura-fukamachi/media-8.JPEG"
   ],
   "ten-one": [
     "images/ten-one/media-1.jpg"

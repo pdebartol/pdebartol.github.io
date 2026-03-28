@@ -268,5 +268,47 @@
         "lat": 22.3078,
         "lng": 114.1715,
         "hiddenImages": []
+    },
+    {
+        "name": "Ramen Matsui",
+        "cuisine": "japanese",
+        "price": "$",
+        "rating": 4,
+        "description": "Shoyu clams ramen",
+        "location": "Kyoto, Japan",
+        "notes": "",
+        "map": "https://share.google/bGv5YiCqZJLktdUPz",
+        "photo": "images/ramen-matsui/media-1.JPEG",
+        "lat": 35.0107,
+        "lng": 135.7592,
+        "hiddenImages": []
+    },
+    {
+        "name": "Biu Biu Mala Tang",
+        "cuisine": "chinese",
+        "price": "$",
+        "rating": 4,
+        "description": "Mala tang",
+        "location": "Paris, France",
+        "notes": "",
+        "map": "https://share.google/O8ZAwXVkY6jENl4yi",
+        "photo": "images/biu-biu-mala-tang/media-1.JPEG",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "hiddenImages": []
+    },
+    {
+        "name": "Ramen Hachiyo",
+        "cuisine": "japanese",
+        "price": "$",
+        "rating": 4,
+        "description": "Shoyu ramen",
+        "location": "Fujikawaguchiko, Japan",
+        "notes": "",
+        "map": "https://share.google/1Yi2MhYVzIDTT6avF",
+        "photo": "images/ramen-hachiyo/media-4.JPEG",
+        "lat": 35.4983,
+        "lng": 138.7687,
+        "hiddenImages": []
     }
 ]

@@ -18,7 +18,7 @@
     {
         "name": "Villa Crespi",
         "cuisine": "italian",
-        "price": "$$$$",
+        "price": "$$$",
         "rating": 5,
         "description": "Linguine, calamaretti e salsa al pane di segale\n",
         "location": "Orta San Giulio, Italy",
@@ -167,6 +167,34 @@
         "photo": "images/yamamoto-menzou/media-1.JPEG",
         "lat": 35.0116,
         "lng": 135.7681,
+        "hiddenImages": []
+    },
+    {
+        "name": "Tempura Fukamachi",
+        "cuisine": "japanese",
+        "price": "$$$",
+        "rating": 5,
+        "description": "Tempura omakase",
+        "location": "Tokyo, Japan",
+        "notes": "",
+        "map": "https://share.google/Fs4AiBJWXfJUj2WM9",
+        "photo": "images/tempura-fukamachi/media-1.JPEG",
+        "lat": 35.6762,
+        "lng": 139.6503,
+        "hiddenImages": []
+    },
+    {
+        "name": "Kunitoraya",
+        "cuisine": "japanese",
+        "price": "$$",
+        "rating": 4,
+        "description": "Katsu curry udon",
+        "location": "Paris, France",
+        "notes": "",
+        "map": "https://share.google/aq97VOezhtGuM74pI",
+        "photo": "images/kunitoraya-paris/media-6.JPEG",
+        "lat": 48.8566,
+        "lng": 2.3522,
         "hiddenImages": []
     }
 ]
