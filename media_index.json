@@ -205,9 +205,7 @@
     "images/kunitoraya-paris/media-1.JPEG",
     "images/kunitoraya-paris/media-2.JPEG",
     "images/kunitoraya-paris/media-3.JPEG",
-    "images/kunitoraya-paris/media-4.JPEG",
-    "images/kunitoraya-paris/media-5.JPEG",
-    "images/kunitoraya-paris/media-6.JPEG"
+    "images/kunitoraya-paris/media-4.JPEG"
   ],
   "la-dong": [
     "images/la-dong/media-1.jpg",
@@ -300,6 +298,13 @@
   ],
   "nara-seimen": [
     "images/nara-seimen/media-1.jpg"
+  ],
+  "ningyocho-imahan-ginza": [
+    "images/ningyocho-imahan-ginza/media-1.JPEG",
+    "images/ningyocho-imahan-ginza/media-2.JPEG",
+    "images/ningyocho-imahan-ginza/media-3.JPEG",
+    "images/ningyocho-imahan-ginza/media-4.JPEG",
+    "images/ningyocho-imahan-ginza/media-5.JPEG"
   ],
   "nowon": [
     "images/nowon/media-1.jpg"
