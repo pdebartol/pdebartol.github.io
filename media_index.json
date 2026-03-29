@@ -380,6 +380,9 @@
     "images/ramen-hosenka/media-2.jpg",
     "images/ramen-hosenka/media-3.jpg"
   ],
+  "ramen-taiga": [
+    "images/ramen-taiga/media-1.JPEG"
+  ],
   "ramen-ishida": [
     "images/ramen-ishida/media-1.jpg",
     "images/ramen-ishida/media-2.jpg"
@@ -424,6 +427,20 @@
     "images/sushi-daigo/media-3.jpg",
     "images/sushi-daigo/media-4.jpg",
     "images/sushi-daigo/media-5.jpg"
+  ],
+  "sushi-tsubomi": [
+    "images/sushi-tsubomi/media-1.JPEG",
+    "images/sushi-tsubomi/media-2.JPEG",
+    "images/sushi-tsubomi/media-3.JPEG",
+    "images/sushi-tsubomi/media-4.JPEG",
+    "images/sushi-tsubomi/media-5.JPEG",
+    "images/sushi-tsubomi/media-6.JPEG",
+    "images/sushi-tsubomi/media-7.JPEG",
+    "images/sushi-tsubomi/media-8.JPEG",
+    "images/sushi-tsubomi/media-9.JPEG",
+    "images/sushi-tsubomi/media-10.JPEG",
+    "images/sushi-tsubomi/media-11.JPEG",
+    "images/sushi-tsubomi/media-12.JPEG"
   ],
   "sushi-ryujiro": [
     "images/sushi-ryujiro/media-2.jpg",

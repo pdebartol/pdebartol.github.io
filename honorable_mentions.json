@@ -275,7 +275,7 @@
         "price": "$",
         "rating": 4,
         "description": "Shoyu clams ramen",
-        "location": "Kyoto, Japan",
+        "location": "Tokyo, Japan",
         "notes": "",
         "map": "https://share.google/bGv5YiCqZJLktdUPz",
         "photo": "images/ramen-matsui/media-1.JPEG",
@@ -309,6 +309,34 @@
         "photo": "images/ramen-hachiyo/media-4.JPEG",
         "lat": 35.4983,
         "lng": 138.7687,
+        "hiddenImages": []
+    },
+    {
+        "name": "Sushi Tsubomi",
+        "cuisine": "japanese",
+        "price": "$$$$",
+        "rating": 4,
+        "description": "Omakase course",
+        "location": "Tokyo, Japan",
+        "notes": "",
+        "map": "https://share.google/kYVKZrdEqc61YDYQL",
+        "photo": "images/sushi-tsubomi/media-11.JPEG",
+        "lat": 35.6762,
+        "lng": 139.6503,
+        "hiddenImages": []
+    },
+    {
+        "name": "Ramen Taiga",
+        "cuisine": "japanese",
+        "price": "$",
+        "rating": 4,
+        "description": "Yuzu miso ramen",
+        "location": "Kanazawa, Japan",
+        "notes": "",
+        "map": "https://share.google/tBBNxWI3Z6tVA6XE1",
+        "photo": "images/ramen-taiga/media-1.JPEG",
+        "lat": 36.5613,
+        "lng": 136.6562,
         "hiddenImages": []
     }
 ]
