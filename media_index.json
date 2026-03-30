@@ -220,9 +220,7 @@
   "leon-s-bagel": [
     "images/leon-s-bagel/media-1.jpg",
     "images/leon-s-bagel/media-2.jpg",
-    "images/leon-s-bagel/media-3.jpg",
-    "images/leon-s-bagel/media-4.jpg",
-    "images/leon-s-bagel/media-5.jpg"
+    "images/leon-s-bagel/media-3.jpg"
   ],
   "luciano": [
     "images/luciano/media-1.jpg"
@@ -239,11 +237,9 @@
   ],
   "margher": [
     "images/margher/media-1.jpg",
-    "images/margher/media-2.jpg",
     "images/margher/media-3.jpg",
     "images/margher/media-4.jpg",
     "images/margher/media-5.jpg",
-    "images/margher/media-6.jpg",
     "images/margher/media-7.jpg",
     "images/margher/media-8.jpg"
   ],
@@ -290,7 +286,6 @@
   ],
   "napul": [
     "images/napul/media-1.jpg",
-    "images/napul/media-2.jpg",
     "images/napul/media-3.jpg",
     "images/napul/media-4.jpg",
     "images/napul/media-5.jpg",
@@ -315,7 +310,6 @@
     "images/okonomiyaki-sakaba-o/media-3.jpg",
     "images/okonomiyaki-sakaba-o/media-4.jpg",
     "images/okonomiyaki-sakaba-o/media-5.jpg",
-    "images/okonomiyaki-sakaba-o/media-6.jpg",
     "images/okonomiyaki-sakaba-o/media-7.jpg"
   ],
   "ooki-izakaya": [
@@ -356,8 +350,7 @@
   ],
   "raku": [
     "images/raku/media-1.jpg",
-    "images/raku/media-2.jpg",
-    "images/raku/media-3.jpg"
+    "images/raku/media-2.jpg"
   ],
   "ramen-danbo": [
     "images/ramen-danbo/media-1.jpg",
@@ -546,16 +539,13 @@
   ],
   "umberto-a-mare": [
     "images/umberto-a-mare/media-1.jpg",
-    "images/umberto-a-mare/media-10.jpg",
-    "images/umberto-a-mare/media-11.jpg",
     "images/umberto-a-mare/media-2.jpg",
-    "images/umberto-a-mare/media-3.jpg",
     "images/umberto-a-mare/media-4.jpg",
     "images/umberto-a-mare/media-5.jpg",
     "images/umberto-a-mare/media-6.jpg",
-    "images/umberto-a-mare/media-7.jpg",
     "images/umberto-a-mare/media-8.jpg",
-    "images/umberto-a-mare/media-9.jpg"
+    "images/umberto-a-mare/media-9.jpg",
+    "images/umberto-a-mare/media-11.jpg"
   ],
   "una-pizza-napoletana": [
     "images/una-pizza-napoletana/media-1.jpg",

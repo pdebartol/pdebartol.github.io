@@ -1,232 +1,602 @@
-// Restaurant data will be loaded from JSON files
-let selectedPlacesData = [];
-let dayToDayData = [];
-let honorableMentionsData = [];
+const SESSION_CACHE_KEYS = {
+    mediaIndex: 'food:media-index:v9'
+};
 
-const STORAGE_KEY = 'food_rec_custom_restaurants';
+const LOCAL_STORAGE_KEYS = {
+    selected: 'food_rec_selected_places',
+    honorable: 'food_rec_honorable_mentions',
+    casual: 'food_rec_casual_places',
+    dayToDay: 'food_rec_day_to_day',
+    hidden: 'food_rec_hidden_restaurants',
+    source: 'food_rec_data_source'
+};
 
-// =========================================
-// Global State
-// =========================================
+const TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 let selectedPlaces = [];
+let casualPlaces = [];
 let dayToDayPlaces = [];
 let honorableMentions = [];
 let hiddenRestaurants = [];
 let mediaIndex = {};
 let currentSlideIndex = 0;
 let currentRestaurantMedia = [];
+let currentRestaurantName = '';
 let editingRestaurantName = null;
-let currentView = 'selected'; // 'selected', 'honorable', or 'everyday'
-let currentCityFilter = 'all'; // Track the selected city filter
+let currentView = 'selected';
+let currentCategoryFilters = new Set(['selected']);
+let currentCityFilters = new Set();
+let restaurantIndex = new Map();
+let restaurantsBySource = {
+    selected: [],
+    honorable: [],
+    casual: [],
+    all: []
+};
+let viewGridMap = new Map();
+let gridImageObserver = null;
+let gridInteractionsBound = false;
+const preloadedCarouselMedia = new Set();
 
-// =========================================
-// Initialization
-// =========================================
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadMediaIndex();
-    await loadRestaurantData();
-    populateCityFilter();
+    try {
+        await Promise.all([loadMediaIndex(), loadRestaurantData()]);
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
+
+    rebuildRestaurantStore();
+    renderCityFilter();
     renderRestaurants();
     setupEventListeners();
     setupAdminPanel();
 });
 
-// =========================================
-// Load Media Index
-// =========================================
-async function loadMediaIndex() {
+async function loadCachedJson(cacheKey, url) {
     try {
-        const cacheBuster = new Date().getTime();
-        const response = await fetch(`media_index.json?v=${cacheBuster}`);
-        if (!response.ok) {
-            console.warn('Could not load media_index.json, carousel will not work');
+        const cached = window.sessionStorage.getItem(cacheKey);
+        if (cached) {
+            return JSON.parse(cached);
+        }
+    } catch (error) {
+        console.warn('Session storage unavailable for', cacheKey, error);
+    }
+
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+        throw new Error(`Failed to load ${url}`);
+    }
+
+    const data = await response.json();
+
+    try {
+        window.sessionStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (error) {
+        console.warn('Unable to store session cache for', cacheKey, error);
+    }
+
+    return data;
+}
+
+async function loadFreshJson(url) {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+        throw new Error(`Failed to load ${url}`);
+    }
+
+    return response.json();
+}
+
+function loadStoredArray(key) {
+    try {
+        const rawValue = window.localStorage.getItem(key);
+        if (!rawValue) {
+            return null;
+        }
+
+        const parsed = JSON.parse(rawValue);
+        return Array.isArray(parsed) ? parsed : null;
+    } catch (error) {
+        console.warn('Unable to read saved data for', key, error);
+        return null;
+    }
+}
+
+function getRestaurantDataSource() {
+    try {
+        return window.localStorage.getItem(LOCAL_STORAGE_KEYS.source) || 'json';
+    } catch (error) {
+        console.warn('Unable to read restaurant data source', error);
+        return 'json';
+    }
+}
+
+function setRestaurantDataSource(source) {
+    try {
+        if (source === 'local') {
+            window.localStorage.setItem(LOCAL_STORAGE_KEYS.source, 'local');
             return;
         }
-        mediaIndex = await response.json();
-        console.log('Media index loaded:', mediaIndex);
-    } catch (err) {
-        console.warn('Error loading media index:', err);
+
+        window.localStorage.removeItem(LOCAL_STORAGE_KEYS.source);
+    } catch (error) {
+        console.warn('Unable to store restaurant data source', error);
     }
 }
 
-// =========================================
-// Load Restaurant Data
-// =========================================
+function clearLegacyRestaurantSessionCache() {
+    try {
+        window.sessionStorage.removeItem('food:selected');
+        window.sessionStorage.removeItem('food:honorable');
+        window.sessionStorage.removeItem('food:casual');
+    } catch (error) {
+        console.warn('Unable to clear legacy restaurant session cache', error);
+    }
+}
+
+async function loadMediaIndex() {
+    try {
+        mediaIndex = await loadCachedJson(SESSION_CACHE_KEYS.mediaIndex, 'media_index.json');
+    } catch (error) {
+        console.warn('Could not load media index, carousel will fall back to cover images', error);
+        mediaIndex = {};
+    }
+}
+
 async function loadRestaurantData() {
     try {
-        // Always load from JSON files with cache-busting to ensure fresh data
-        const cacheBuster = new Date().getTime();
-        const [selectedResponse, dayToDayResponse, honorableResponse, casualResponse] = await Promise.all([
-            fetch(`selected_places.json?v=${cacheBuster}`),
-            fetch(`day_to_day.json?v=${cacheBuster}`),
-            fetch(`honorable_mentions.json?v=${cacheBuster}`),
-            fetch(`casual.json?v=${cacheBuster}`)
+        clearLegacyRestaurantSessionCache();
+
+        const storedHidden = loadStoredArray(LOCAL_STORAGE_KEYS.hidden);
+        const storedDayToDay = loadStoredArray(LOCAL_STORAGE_KEYS.dayToDay);
+
+        hiddenRestaurants = storedHidden || [];
+        dayToDayPlaces = storedDayToDay || [];
+
+        if (getRestaurantDataSource() === 'local') {
+            const storedSelected = loadStoredArray(LOCAL_STORAGE_KEYS.selected);
+            const storedHonorable = loadStoredArray(LOCAL_STORAGE_KEYS.honorable);
+            const storedCasual = loadStoredArray(LOCAL_STORAGE_KEYS.casual);
+
+        if (Array.isArray(storedSelected) && Array.isArray(storedHonorable)) {
+            selectedPlaces = storedSelected;
+            honorableMentions = storedHonorable;
+            if (Array.isArray(storedCasual)) {
+                casualPlaces = storedCasual;
+                } else {
+                    try {
+                        casualPlaces = await loadFreshJson('casual.json');
+                    } catch (casualError) {
+                        console.warn('Could not load casual.json, falling back to an empty casual list', casualError);
+                    casualPlaces = [];
+                }
+            }
+            migrateRestaurantsToHonorable();
+            migrateRestaurantMedia();
+            saveRestaurants();
+            return;
+        }
+
+            setRestaurantDataSource('json');
+        }
+
+        const [selected, honorable, casual] = await Promise.all([
+            loadFreshJson('selected_places.json'),
+            loadFreshJson('honorable_mentions.json'),
+            loadFreshJson('casual.json')
         ]);
 
-        if (selectedResponse.ok && dayToDayResponse.ok && honorableResponse.ok && casualResponse.ok) {
-            selectedPlaces = await selectedResponse.json();
-            dayToDayPlaces = await dayToDayResponse.json();
-            honorableMentions = await honorableResponse.json();
-            const casualPlaces = await casualResponse.json();
-            // Merge casual into dayToDayPlaces for now, or create a separate array
-            // For simplicity, let's use dayToDayPlaces as casual
-            dayToDayPlaces = casualPlaces;
-            hiddenRestaurants = [];
-            console.log('Loaded from JSON files');
-        } else {
-            console.error('Failed to load restaurant data');
-        }
-
-        console.log(`Loaded ${selectedPlaces.length} selected places, ${honorableMentions.length} honorable mentions, ${hiddenRestaurants.length} hidden, and ${dayToDayPlaces.length} casual places`);
-    } catch (err) {
-        console.error('Error loading restaurant data:', err);
+        selectedPlaces = selected;
+        honorableMentions = honorable;
+        casualPlaces = casual;
+        migrateRestaurantsToHonorable();
+        migrateRestaurantMedia();
+    } catch (error) {
+        console.error('Error loading restaurant data:', error);
+        selectedPlaces = [];
+        casualPlaces = [];
+        honorableMentions = [];
+        hiddenRestaurants = [];
+        dayToDayPlaces = [];
     }
 }
 
-// =========================================
-// City Filter Functions
-// =========================================
-function populateCityFilter() {
-    const cityFilter = document.getElementById('cityFilter');
-    if (!cityFilter) return;
+function rebuildRestaurantStore() {
+    const selectedStore = selectedPlaces.map((restaurant, index) => prepareRestaurantData(restaurant, 'selected', index));
+    const honorableStore = honorableMentions.map((restaurant, index) => prepareRestaurantData(restaurant, 'honorable', index));
+    const casualStore = casualPlaces.map((restaurant, index) => prepareRestaurantData(restaurant, 'casual', index));
+    const allStore = [...selectedStore, ...honorableStore, ...casualStore];
 
-    // Get current restaurants based on view
-    let restaurants;
-    if (currentView === 'selected') {
-        restaurants = selectedPlaces;
-    } else if (currentView === 'honorable') {
-        restaurants = honorableMentions;
-    } else if (currentView === 'casual') {
-        restaurants = dayToDayPlaces;
-    } else {
-        restaurants = selectedPlaces;
+    restaurantsBySource = {
+        selected: selectedStore,
+        honorable: honorableStore,
+        casual: casualStore,
+        all: allStore
+    };
+
+    restaurantIndex = new Map(allStore.map((restaurant) => [restaurant.id, restaurant]));
+    resetRestaurantGrid();
+}
+
+function resetRestaurantGrid() {
+    const grid = document.getElementById('restaurantGrid');
+    if (grid) {
+        grid.innerHTML = '';
     }
 
-    // Extract unique cities from the location field
-    const cities = new Set();
-    restaurants.forEach(r => {
-        if (r.location) {
-            // Extract city from "City, Country" format
-            const city = r.location.split(',')[0].trim();
-            cities.add(city);
-        }
-    });
+    viewGridMap = new Map();
 
-    // Sort cities alphabetically
-    const sortedCities = Array.from(cities).sort();
-
-    // Save current selection
-    const currentSelection = cityFilter.value;
-
-    // Clear and repopulate the dropdown
-    cityFilter.innerHTML = '<option value="all">All Cities</option>';
-    sortedCities.forEach(city => {
-        const option = document.createElement('option');
-        option.value = city;
-        option.textContent = city;
-        cityFilter.appendChild(option);
-    });
-
-    // Restore selection if it still exists, otherwise reset to 'all'
-    if (sortedCities.includes(currentSelection)) {
-        cityFilter.value = currentSelection;
-        currentCityFilter = currentSelection;
-    } else {
-        cityFilter.value = 'all';
-        currentCityFilter = 'all';
+    if (gridImageObserver) {
+        gridImageObserver.disconnect();
+        gridImageObserver = null;
     }
 }
 
-// =========================================
-// Map Functions
-// =========================================
+function prepareRestaurantData(restaurant, source, index) {
+    const idBase = slugifyRestaurantName(restaurant.name) || `${source}-${index}`;
+    const city = extractCityFromLocation(restaurant.location);
 
+    return {
+        ...restaurant,
+        source,
+        id: `${source}-${idBase}-${index}`,
+        city,
+        cityKey: normalizeFilterValue(city),
+        photos: getRestaurantPhotos(restaurant),
+        cardElement: null
+    };
+}
 
-// =========================================
-// Rendering
-// =========================================
+function getCurrentViewRestaurants() {
+    return restaurantsBySource[currentView] || restaurantsBySource.selected || [];
+}
+
+function normalizeFilterValue(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function extractCityFromLocation(location) {
+    const normalizedLocation = String(location || '').trim();
+    if (!normalizedLocation) {
+        return '';
+    }
+
+    const [city] = normalizedLocation.split(',');
+    return city ? city.trim() : normalizedLocation;
+}
+
+function getCityFilterOptions() {
+    const cityMap = new Map();
+
+    getCurrentViewRestaurants().forEach((restaurant) => {
+        const city = extractCityFromLocation(restaurant.location);
+        if (!city) {
+            return;
+        }
+
+        const key = normalizeFilterValue(city);
+        const existing = cityMap.get(key);
+        if (existing) {
+            existing.count += 1;
+            return;
+        }
+
+        cityMap.set(key, {
+            key,
+            label: city,
+            count: 1
+        });
+    });
+
+    return Array.from(cityMap.values()).sort((a, b) => {
+        if (a.count !== b.count) {
+            return b.count - a.count;
+        }
+
+        return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+    });
+}
+
+function getSelectedCityFilterLabels() {
+    const cityOptions = getCityFilterOptions();
+    const selectedCityKeys = new Set(currentCityFilters);
+
+    return cityOptions
+        .filter((option) => selectedCityKeys.has(option.key))
+        .map((option) => option.label);
+}
+
+function getSelectedCategoryFilterLabels() {
+    const labels = [];
+
+    if (currentCategoryFilters.has('selected')) {
+        labels.push('Selected Places');
+    }
+
+    if (currentCategoryFilters.has('honorable')) {
+        labels.push('Honorable Mentions');
+    }
+
+    if (currentCategoryFilters.has('casual')) {
+        labels.push('Casual Places');
+    }
+
+    return labels;
+}
+
+function formatCityListForMessage(cityLabels) {
+    if (cityLabels.length <= 3) {
+        return cityLabels.join(', ');
+    }
+
+    return `${cityLabels.slice(0, 3).join(', ')} and ${cityLabels.length - 3} more`;
+}
+
+function getCityFilterSummaryText() {
+    const selectedCityLabels = getSelectedCityFilterLabels();
+
+    if (selectedCityLabels.length === 0) {
+        return 'All Cities';
+    }
+
+    if (selectedCityLabels.length === 1) {
+        return selectedCityLabels[0];
+    }
+
+    return `${selectedCityLabels.length} cities selected`;
+}
+
+function getCollectionViewTheme() {
+    if (currentCategoryFilters.size !== 1) {
+        return 'all';
+    }
+
+    if (currentCategoryFilters.has('selected')) {
+        return 'selected';
+    }
+
+    if (currentCategoryFilters.has('honorable')) {
+        return 'honorable';
+    }
+
+    return 'all';
+}
+
+function syncCategoryFilterButtons() {
+    document.querySelectorAll('.view-btn').forEach((button) => {
+        const view = button.dataset.view || '';
+        const isActive = currentCategoryFilters.has(view);
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+    });
+}
+
+function renderCityFilter() {
+    const dropdown = document.getElementById('cityFilterDropdown');
+    const menu = document.getElementById('cityFilterOptions');
+    const summaryLabel = document.getElementById('cityFilterTriggerLabel');
+    const clearButton = document.getElementById('clearCityFilter');
+
+    if (!dropdown || !menu || !summaryLabel) {
+        return;
+    }
+
+    const availableCityOptions = getCityFilterOptions();
+    const availableCityKeys = new Set(availableCityOptions.map((option) => option.key));
+    const filteredSelections = Array.from(currentCityFilters).filter((key) => availableCityKeys.has(key));
+
+    if (filteredSelections.length > 1) {
+        currentCityFilters = new Set([filteredSelections[0]]);
+    } else if (filteredSelections.length !== currentCityFilters.size) {
+        currentCityFilters = new Set(filteredSelections);
+    }
+
+    summaryLabel.textContent = getCityFilterSummaryText();
+    summaryLabel.title = getSelectedCityFilterLabels().join(', ') || 'All Cities';
+
+    if (clearButton) {
+        clearButton.disabled = currentCityFilters.size === 0;
+    }
+
+    menu.innerHTML = '';
+
+    if (availableCityOptions.length === 0) {
+        const emptyState = document.createElement('p');
+        emptyState.className = 'food-city-empty';
+        emptyState.textContent = 'No cities available.';
+        menu.appendChild(emptyState);
+        return;
+    }
+
+    availableCityOptions.forEach((option) => {
+        const label = document.createElement('label');
+        label.className = 'food-city-option';
+
+        const cityInput = document.createElement('input');
+        cityInput.type = 'radio';
+        cityInput.name = 'city-filter';
+        cityInput.checked = currentCityFilters.has(option.key);
+        cityInput.setAttribute('aria-label', option.label);
+        label.classList.toggle('active', cityInput.checked);
+
+        const cityName = document.createElement('span');
+        cityName.className = 'food-city-option-name';
+        cityName.textContent = option.label;
+        label.appendChild(cityInput);
+        label.appendChild(cityName);
+
+        cityInput.addEventListener('change', () => {
+            if (cityInput.checked) {
+                currentCityFilters = new Set([option.key]);
+            }
+
+            renderCityFilter();
+            renderRestaurants();
+        });
+        menu.appendChild(label);
+    });
+}
+
+function getFilteredRestaurants() {
+    const restaurants = getCurrentViewRestaurants();
+    const hasCityFilters = currentCityFilters.size > 0;
+
+    return restaurants.filter((restaurant) => {
+        if (hasCityFilters) {
+            const restaurantCityKey = restaurant.cityKey || normalizeFilterValue(extractCityFromLocation(restaurant.location));
+            if (!currentCityFilters.has(restaurantCityKey)) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+}
+
+function syncFoodViewTheme() {
+    if (!document.body || !document.body.classList.contains('food-page')) {
+        return;
+    }
+
+    document.body.dataset.collectionView = currentView;
+}
+
 function renderRestaurants() {
     const grid = document.getElementById('restaurantGrid');
     const noResults = document.getElementById('noResults');
 
-    grid.innerHTML = '';
-
-    // Select the appropriate data source based on current view
-    let restaurants;
-    if (currentView === 'selected') {
-        restaurants = selectedPlaces;
-    } else if (currentView === 'honorable') {
-        restaurants = honorableMentions;
-    } else if (currentView === 'casual') {
-        restaurants = dayToDayPlaces;
-    } else {
-        restaurants = selectedPlaces;
-    }
-
-    // Show grid, hide map for other views
-    grid.style.display = 'grid';
-
-    // Filter by city if a city is selected
-    let filtered = restaurants;
-    if (currentCityFilter !== 'all') {
-        filtered = filtered.filter(r => {
-            // Extract city from location (format: "City, Country")
-            const city = r.location.split(',')[0].trim();
-            return city === currentCityFilter;
-        });
-    }
-
-    if (filtered.length === 0) {
-        noResults.style.display = 'block';
+    if (!grid || !noResults) {
         return;
     }
 
-    noResults.style.display = 'none';
+    syncFoodViewTheme();
+    syncCategoryFilterButtons();
 
-    filtered.forEach(r => {
-        const card = document.createElement('div');
-        card.className = 'restaurant-card';
+    const filteredRestaurants = getFilteredRestaurants();
+    const activeGrid = ensureViewGridBuilt(grid, currentView);
 
-        // Escape single quotes in restaurant name
-        const safeName = r.name.replace(/'/g, "\\'");
+    const visibleRestaurantIds = new Set(filteredRestaurants.map((restaurant) => restaurant.id));
 
-        card.innerHTML = `
-            <a class="card-image-wrapper" onclick="openCarousel('${safeName}'); return false;">
-                <div class="card-image" style="background-image: url('${r.photo}')">
-                    ${!r.photo || r.photo === '' ? `<div class="placeholder-image"></div>` : ''}
-                </div>
-                <div class="photo-hover-overlay">
-                    <span>📸 View Photos</span>
-                </div>
-            </a>
-            <div class="card-content">
-                <div class="card-header">
-                    <h2 class="restaurant-name">${r.name}</h2>
-                </div>
-            <div class="cuisine-tags">
-                <span class="tag">${r.cuisine.toUpperCase()}</span>
-                <span class="tag price">${r.price}</span>
-            </div>
-            <p class="description">${r.description}</p>
-            <div class="card-footer">
-                <a href="${r.map}" target="_blank" class="location-link">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    ${r.location}
-                </a>
-            </div>
-        </div>
-        `;
-        grid.appendChild(card);
+    getCurrentViewRestaurants().forEach((restaurant) => {
+        if (restaurant.cardElement) {
+            restaurant.cardElement.hidden = !visibleRestaurantIds.has(restaurant.id);
+        }
     });
+
+    viewGridMap.forEach((panel, view) => {
+        panel.hidden = view !== currentView;
+    });
+
+    const hasResults = filteredRestaurants.length > 0;
+    if (activeGrid) {
+        activeGrid.hidden = !hasResults;
+    }
+    noResults.style.display = hasResults ? 'none' : 'block';
+    updateNoResultsMessage();
+
+    updateSummary(filteredRestaurants.length);
+}
+
+function ensureViewGridBuilt(container, view) {
+    if (!container) {
+        return null;
+    }
+
+    if (viewGridMap.has(view)) {
+        return viewGridMap.get(view);
+    }
+
+    const panel = document.createElement('div');
+    panel.className = 'restaurant-grid-panel';
+    panel.dataset.view = view;
+    panel.hidden = false;
+
+    const fragment = document.createDocumentFragment();
+    (restaurantsBySource[view] || []).forEach((restaurant) => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = renderCompactCardMarkup(restaurant);
+        restaurant.cardElement = wrapper.firstElementChild;
+        fragment.appendChild(restaurant.cardElement);
+    });
+
+    panel.appendChild(fragment);
+    container.appendChild(panel);
+    viewGridMap.set(view, panel);
+    setupCardImageLoading(panel);
+
+    return panel;
+}
+
+function renderCompactCardMarkup(restaurant) {
+    const hasNotes = Boolean(restaurant.notes && restaurant.notes.trim());
+    const description = restaurant.description || 'Recommendation coming soon.';
+    const location = restaurant.location || 'Location unavailable';
+    const actions = [];
+
+    if (restaurant.map) {
+        actions.push(`<a class="detail-link strong-action" href="${escapeAttr(restaurant.map)}" target="_blank" rel="noreferrer">📍 Map</a>`);
+    }
+    if (hasNotes) {
+        actions.push(`<button type="button" class="detail-link detail-link-button note-trigger" data-toggle-notes aria-expanded="false">Notes</button>`);
+    }
+
+    return `
+        <article class="restaurant-card compact-restaurant-card">
+            <div class="card-media-frame">
+                ${restaurant.photo ? `
+                    <button type="button" class="card-media card-media-button" data-open-carousel data-restaurant-id="${escapeAttr(restaurant.id)}" data-start-index="0" aria-label="Open pictures for ${escapeAttr(restaurant.name)}">
+                        <img class="lazy-card-image" src="${TRANSPARENT_PIXEL}" data-src="${escapeAttr(restaurant.photo)}" alt="${escapeAttr(restaurant.name)}" loading="lazy" decoding="async" fetchpriority="low" width="400" height="300">
+                    </button>
+                ` : `
+                    <div class="card-media card-media-empty" aria-hidden="true">
+                        <div class="placeholder-image compact-placeholder">No photo available</div>
+                    </div>
+                `}
+            </div>
+            <div class="card-content compact-card-content">
+                <div class="card-head">
+                    <div class="card-head-copy">
+                        <h2 class="restaurant-name">${escapeHtml(restaurant.name)}</h2>
+                        <div class="restaurant-location">${escapeHtml(location)}</div>
+                    </div>
+                </div>
+                <div class="tag-row">
+                    <span class="tag">${escapeHtml(titleizeCuisine(restaurant.cuisine || 'unknown'))}</span>
+                </div>
+                <p class="description compact-description">${escapeHtml(description)}</p>
+                ${actions.length ? `<div class="compact-actions">${actions.join('')}</div>` : ''}
+                ${hasNotes ? `<div class="compact-note-panel" hidden><p class="muted-note compact-note">${escapeHtml(restaurant.notes)}</p></div>` : ''}
+            </div>
+        </article>
+    `;
+}
+
+function updateSummary(count) {
+    const summaryCount = document.getElementById('summaryCount');
+
+    if (summaryCount) {
+        summaryCount.textContent = `${count} restaurant${count === 1 ? '' : 's'}`;
+    }
+}
+
+function updateNoResultsMessage() {
+    const noResultsMessage = document.querySelector('#noResults p');
+
+    if (!noResultsMessage) {
+        return;
+    }
+
+    const cityLabels = getSelectedCityFilterLabels();
+
+    if (cityLabels.length) {
+        noResultsMessage.textContent = `No restaurants found in ${formatCityListForMessage(cityLabels)}. Try a different city or clear the city filter.`;
+        return;
+    }
+
+    noResultsMessage.textContent = 'No restaurants found. Try adjusting your filters!';
 }
 
 function getRestaurantMediaKey(restaurant) {
-    const nameSlug = restaurant.name.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    const nameSlug = slugifyRestaurantName(restaurant.name);
 
     if (nameSlug && mediaIndex[nameSlug]) {
         return nameSlug;
@@ -245,46 +615,217 @@ function getRestaurantMediaKey(restaurant) {
     return nameSlug;
 }
 
-// =========================================
-// Carousel Functions
-// =========================================
-function openCarousel(restaurantName) {
-    // Search in all three data sources
-    const restaurant = selectedPlaces.find(r => r.name === restaurantName) ||
-        honorableMentions.find(r => r.name === restaurantName) ||
-        dayToDayPlaces.find(r => r.name === restaurantName);
+function getRestaurantPhotos(restaurant) {
+    const mediaKey = getRestaurantMediaKey(restaurant);
+    const indexedPhotos = mediaKey ? (mediaIndex[mediaKey] || []) : [];
+    const hiddenImages = Array.isArray(restaurant.hiddenImages) ? restaurant.hiddenImages : [];
+    const mergedPhotos = [...indexedPhotos];
+
+    if (restaurant.photo) {
+        mergedPhotos.unshift(restaurant.photo);
+    }
+
+    return Array.from(new Set(mergedPhotos)).filter((photo) => photo && !hiddenImages.includes(photo));
+}
+
+function slugifyRestaurantName(name) {
+    return String(name || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function titleizeCuisine(cuisine) {
+    return String(cuisine || '')
+        .split(/[\s-]+/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ');
+}
+
+function moveRestaurantBetweenCollections(restaurantName, sourceCollection, targetCollection) {
+    const sourceIndex = sourceCollection.findIndex((restaurant) => restaurant.name === restaurantName);
+    if (sourceIndex === -1) {
+        return false;
+    }
+
+    const [restaurant] = sourceCollection.splice(sourceIndex, 1);
+    if (!targetCollection.some((candidate) => candidate.name === restaurantName)) {
+        targetCollection.push(restaurant);
+    }
+
+    return true;
+}
+
+function migrateRestaurantsToHonorable() {
+    const movedIyoExperienceFromCasual = moveRestaurantBetweenCollections('IYO Experience', casualPlaces, honorableMentions);
+    const movedIyoExperienceFromDayToDay = moveRestaurantBetweenCollections('IYO Experience', dayToDayPlaces, honorableMentions);
+    const movedMimiAllaFerroviaFromCasual = moveRestaurantBetweenCollections('Mimi alla ferrovia', casualPlaces, honorableMentions);
+    const movedMimiAllaFerroviaFromDayToDay = moveRestaurantBetweenCollections('Mimi alla ferrovia', dayToDayPlaces, honorableMentions);
+    const movedOkonomiyakiSakabaOFromCasual = moveRestaurantBetweenCollections('Okonomiyaki Sakaba O', casualPlaces, honorableMentions);
+    const movedOkonomiyakiSakabaOFromDayToDay = moveRestaurantBetweenCollections('Okonomiyaki Sakaba O', dayToDayPlaces, honorableMentions);
+    const movedSushiDaigoFromCasual = moveRestaurantBetweenCollections('Sushi Daigo', casualPlaces, honorableMentions);
+    const movedSushiDaigoFromDayToDay = moveRestaurantBetweenCollections('Sushi Daigo', dayToDayPlaces, honorableMentions);
+    const movedBraceriaBifulcoFromDayToDay = moveRestaurantBetweenCollections('Braceria Bifulco', dayToDayPlaces, honorableMentions);
+    const movedBraceriaBifulcoFromCasual = moveRestaurantBetweenCollections('Braceria Bifulco', casualPlaces, honorableMentions);
+    const movedRaku = moveRestaurantBetweenCollections('Raku', casualPlaces, honorableMentions);
+    const movedUnaPizza = moveRestaurantBetweenCollections('Una Pizza Napoletana', casualPlaces, honorableMentions);
+    const movedSmithAndWollensky = moveRestaurantBetweenCollections('Smith and Wollensky', casualPlaces, honorableMentions);
+    const movedUmbertoAMare = moveRestaurantBetweenCollections('Umberto a mare', casualPlaces, honorableMentions);
+
+    return movedIyoExperienceFromCasual
+        || movedIyoExperienceFromDayToDay
+        || movedMimiAllaFerroviaFromCasual
+        || movedMimiAllaFerroviaFromDayToDay
+        || movedOkonomiyakiSakabaOFromCasual
+        || movedOkonomiyakiSakabaOFromDayToDay
+        || movedSushiDaigoFromCasual
+        || movedSushiDaigoFromDayToDay
+        || movedBraceriaBifulcoFromDayToDay
+        || movedBraceriaBifulcoFromCasual
+        || movedRaku
+        || movedUnaPizza
+        || movedSmithAndWollensky
+        || movedUmbertoAMare;
+}
+
+function migrateRestaurantPhoto(name, newPhoto, collections) {
+    return collections.reduce((migrated, collection) => {
+        const restaurant = collection.find((entry) => entry.name === name);
+        if (!restaurant || restaurant.photo === newPhoto) {
+            return migrated;
+        }
+
+        restaurant.photo = newPhoto;
+        return true;
+    }, false);
+}
+
+function migrateRestaurantMedia() {
+    return migrateRestaurantPhoto('Margherì', 'images/margher/media-3.jpg', [casualPlaces, dayToDayPlaces]);
+}
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, '&#96;');
+}
+
+function setupCardImageLoading(root) {
+    const images = root.querySelectorAll('.lazy-card-image[data-src]');
+    if (!images.length) {
+        return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+        images.forEach(loadCardImage);
+        return;
+    }
+
+    if (!gridImageObserver) {
+        gridImageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                loadCardImage(entry.target);
+                observer.unobserve(entry.target);
+            });
+        }, {
+            rootMargin: '300px 0px'
+        });
+    }
+
+    images.forEach((image) => {
+        gridImageObserver.observe(image);
+    });
+}
+
+function loadCardImage(image) {
+    const src = image.dataset.src;
+    if (!src) {
+        return;
+    }
+
+    image.addEventListener('load', () => {
+        image.classList.add('loaded');
+    }, { once: true });
+
+    image.src = src;
+    image.removeAttribute('data-src');
+}
+
+function findRestaurantByName(name) {
+    return selectedPlaces.find((restaurant) => restaurant.name === name)
+        || honorableMentions.find((restaurant) => restaurant.name === name)
+        || casualPlaces.find((restaurant) => restaurant.name === name)
+        || hiddenRestaurants.find((restaurant) => restaurant.name === name)
+        || dayToDayPlaces.find((restaurant) => restaurant.name === name);
+}
+
+function openCarousel(restaurantName, startIndex = 0) {
+    const restaurant = findRestaurantByName(restaurantName);
     if (!restaurant) {
         console.error('Restaurant not found:', restaurantName);
         return;
     }
 
-    const mediaKey = getRestaurantMediaKey(restaurant);
-    currentRestaurantMedia = mediaIndex[mediaKey] || [restaurant.photo];
+    openCarouselForRestaurant(restaurant, startIndex);
+}
 
-    // Filter out hidden images
-    if (restaurant.hiddenImages && restaurant.hiddenImages.length > 0) {
-        currentRestaurantMedia = currentRestaurantMedia.filter(img => !restaurant.hiddenImages.includes(img));
-    }
+function openCarouselForRestaurant(restaurant, startIndex = 0) {
+    const photos = Array.isArray(restaurant.photos) && restaurant.photos.length
+        ? restaurant.photos
+        : getRestaurantPhotos(restaurant);
 
-    // Ensure we have at least one image (the cover photo)
-    if (currentRestaurantMedia.length === 0 && restaurant.photo) {
-        currentRestaurantMedia = [restaurant.photo];
-    }
-
-    currentSlideIndex = 0;
+    currentRestaurantMedia = photos.length > 0
+        ? photos
+        : (restaurant.photo ? [restaurant.photo] : []);
+    currentRestaurantName = restaurant.name || 'Pictures';
+    currentSlideIndex = Math.max(0, Math.min(startIndex, currentRestaurantMedia.length - 1));
+    preloadedCarouselMedia.clear();
 
     const modal = document.getElementById('carouselModal');
+    if (!modal || currentRestaurantMedia.length === 0) {
+        return;
+    }
+
     modal.classList.add('active');
-    updateCarousel();
+    document.body.classList.add('carousel-open');
     setupCarouselDots();
+    updateCarousel();
 }
 
 function closeCarousel() {
     const modal = document.getElementById('carouselModal');
-    modal.classList.remove('active');
+    const video = document.getElementById('carouselVideo');
+
+    if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+    }
+
+    if (modal) {
+        modal.classList.remove('active');
+    }
+
+    document.body.classList.remove('carousel-open');
 }
 
 function changeSlide(direction) {
+    if (!currentRestaurantMedia.length) {
+        return;
+    }
+
     currentSlideIndex += direction;
     if (currentSlideIndex < 0) currentSlideIndex = currentRestaurantMedia.length - 1;
     if (currentSlideIndex >= currentRestaurantMedia.length) currentSlideIndex = 0;
@@ -292,41 +833,70 @@ function changeSlide(direction) {
 }
 
 function goToSlide(index) {
+    if (!currentRestaurantMedia.length) {
+        return;
+    }
+
     currentSlideIndex = index;
     updateCarousel();
 }
 
 function updateCarousel() {
-    if (currentRestaurantMedia.length === 0) return;
+    if (currentRestaurantMedia.length === 0) {
+        return;
+    }
 
     const mediaPath = currentRestaurantMedia[currentSlideIndex];
     const img = document.getElementById('carouselImage');
     const video = document.getElementById('carouselVideo');
     const caption = document.getElementById('carouselCaption');
 
-    // Check if it's a video or image
-    if (mediaPath.endsWith('.mp4') || mediaPath.endsWith('.mov')) {
+    if (!img || !video || !caption) {
+        return;
+    }
+
+    if (isVideoMedia(mediaPath)) {
         img.style.display = 'none';
         video.style.display = 'block';
         video.src = mediaPath;
+        video.load();
     } else {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
         video.style.display = 'none';
         img.style.display = 'block';
+        img.classList.remove('is-ready');
+        img.addEventListener('load', () => {
+            img.classList.add('is-ready');
+        }, { once: true });
         img.src = mediaPath;
+        img.alt = `${currentRestaurantName} picture ${currentSlideIndex + 1}`;
+
+        if (img.complete) {
+            img.classList.add('is-ready');
+        }
     }
 
-    caption.textContent = `${currentSlideIndex + 1} / ${currentRestaurantMedia.length}`;
+    caption.textContent = `${currentRestaurantName} · ${currentSlideIndex + 1} / ${currentRestaurantMedia.length}`;
     updateDots();
+    preloadAdjacentCarouselMedia();
 }
 
 function setupCarouselDots() {
     const dotsContainer = document.getElementById('carouselDots');
+    if (!dotsContainer) {
+        return;
+    }
+
     dotsContainer.innerHTML = '';
 
     currentRestaurantMedia.forEach((_, index) => {
-        const dot = document.createElement('span');
+        const dot = document.createElement('button');
+        dot.type = 'button';
         dot.className = 'carousel-dot';
-        dot.onclick = () => goToSlide(index);
+        dot.setAttribute('aria-label', `Go to picture ${index + 1}`);
+        dot.addEventListener('click', () => goToSlide(index));
         dotsContainer.appendChild(dot);
     });
 
@@ -334,38 +904,87 @@ function setupCarouselDots() {
 }
 
 function updateDots() {
-    const dots = document.querySelectorAll('.carousel-dot');
-    dots.forEach((dot, index) => {
-        if (index === currentSlideIndex) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlideIndex);
     });
 }
 
-// =========================================
-// Event Listeners
-// =========================================
-function setupEventListeners() {
+function preloadAdjacentCarouselMedia() {
+    const total = currentRestaurantMedia.length;
+    if (total < 2) {
+        return;
+    }
 
-    // View toggle buttons
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentView = btn.dataset.view;
-            populateCityFilter();
+    preloadCarouselMedia((currentSlideIndex + 1) % total);
+    preloadCarouselMedia((currentSlideIndex - 1 + total) % total);
+}
+
+function preloadCarouselMedia(index) {
+    const mediaPath = currentRestaurantMedia[index];
+    if (!mediaPath || isVideoMedia(mediaPath) || preloadedCarouselMedia.has(mediaPath)) {
+        return;
+    }
+
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = mediaPath;
+    preloadedCarouselMedia.add(mediaPath);
+}
+
+function isVideoMedia(path) {
+    return /\.((mp4)|(mov)|(webm))$/i.test(String(path || ''));
+}
+
+function setupEventListeners() {
+    document.querySelectorAll('.view-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+            const view = button.dataset.view || '';
+            currentView = view || 'selected';
+            currentCategoryFilters = new Set([currentView]);
+            renderCityFilter();
             renderRestaurants();
         });
     });
 
-    // City filter
-    const cityFilter = document.getElementById('cityFilter');
-    if (cityFilter) {
-        cityFilter.addEventListener('change', (e) => {
-            currentCityFilter = e.target.value;
+    const clearCityFilter = document.getElementById('clearCityFilter');
+    if (clearCityFilter) {
+        clearCityFilter.addEventListener('click', () => {
+            currentCityFilters.clear();
+            renderCityFilter();
             renderRestaurants();
+        });
+    }
+
+    const grid = document.getElementById('restaurantGrid');
+    if (grid && !gridInteractionsBound) {
+        gridInteractionsBound = true;
+        grid.addEventListener('click', (event) => {
+            const carouselTrigger = event.target.closest('[data-open-carousel]');
+            if (carouselTrigger && grid.contains(carouselTrigger)) {
+                const restaurant = restaurantIndex.get(carouselTrigger.dataset.restaurantId || '');
+                if (!restaurant) {
+                    return;
+                }
+
+                const startIndex = Number(carouselTrigger.dataset.startIndex || '0');
+                openCarouselForRestaurant(restaurant, startIndex);
+                return;
+            }
+
+            const notesTrigger = event.target.closest('[data-toggle-notes]');
+            if (notesTrigger && grid.contains(notesTrigger)) {
+                const card = notesTrigger.closest('.restaurant-card');
+                const panel = card ? card.querySelector('.compact-note-panel') : null;
+
+                if (!panel) {
+                    return;
+                }
+
+                const nextState = panel.hidden;
+                panel.hidden = !nextState;
+                notesTrigger.classList.toggle('active', nextState);
+                notesTrigger.setAttribute('aria-expanded', String(nextState));
+            }
         });
     }
 
@@ -410,13 +1029,31 @@ function setupEventListeners() {
         resetDataBtn.addEventListener('click', resetData);
     }
 
-    // Keyboard navigation for carousel
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (event) => {
+        const cityDropdown = document.getElementById('cityFilterDropdown');
+        if (cityDropdown && cityDropdown.open && event.key === 'Escape') {
+            cityDropdown.open = false;
+        }
+
         const modal = document.getElementById('carouselModal');
-        if (modal.classList.contains('active')) {
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-            if (e.key === 'ArrowRight') changeSlide(1);
-            if (e.key === 'Escape') closeCarousel();
+        if (modal && modal.classList.contains('active')) {
+            if (event.key === 'ArrowLeft') changeSlide(-1);
+            if (event.key === 'ArrowRight') changeSlide(1);
+            if (event.key === 'Escape') closeCarousel();
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        const cityDropdown = document.getElementById('cityFilterDropdown');
+        if (cityDropdown && cityDropdown.open && !cityDropdown.contains(event.target)) {
+            cityDropdown.open = false;
+        }
+    });
+
+    document.addEventListener('focusin', (event) => {
+        const cityDropdown = document.getElementById('cityFilterDropdown');
+        if (cityDropdown && cityDropdown.open && !cityDropdown.contains(event.target)) {
+            cityDropdown.open = false;
         }
     });
 }
@@ -428,13 +1065,20 @@ function setupAdminPanel() {
     renderAdminList();
 }
 
+function refreshRestaurantViews() {
+    rebuildRestaurantStore();
+    renderCityFilter();
+    renderRestaurants();
+    renderAdminList();
+}
+
 function renderAdminList() {
     const list = document.getElementById('adminList');
     list.innerHTML = '';
 
 
     // Combine all lists for admin view
-    const allRestaurants = [...selectedPlaces, ...honorableMentions, ...hiddenRestaurants, ...dayToDayPlaces];
+    const allRestaurants = [...selectedPlaces, ...honorableMentions, ...casualPlaces, ...hiddenRestaurants, ...dayToDayPlaces];
 
     allRestaurants.forEach((r, index) => {
         const item = document.createElement('div');
@@ -446,6 +1090,7 @@ function renderAdminList() {
         let categoryBadge = '';
         if (selectedPlaces.find(p => p.name === r.name)) categoryBadge = '⭐';
         else if (honorableMentions.find(p => p.name === r.name)) categoryBadge = '🏅';
+        else if (casualPlaces.find(p => p.name === r.name)) categoryBadge = '🌿';
         else if (hiddenRestaurants.find(p => p.name === r.name)) categoryBadge = '🔒';
 
         item.innerHTML = `
@@ -462,6 +1107,7 @@ function renderAdminList() {
 function editRestaurant(name) {
     const restaurant = selectedPlaces.find(r => r.name === name) ||
         honorableMentions.find(r => r.name === name) ||
+        casualPlaces.find(r => r.name === name) ||
         hiddenRestaurants.find(r => r.name === name) ||
         dayToDayPlaces.find(r => r.name === name);
     if (!restaurant) return;
@@ -481,6 +1127,7 @@ function editRestaurant(name) {
     // Set category
     let category = 'selected';
     if (honorableMentions.find(r => r.name === name)) category = 'honorable';
+    else if (casualPlaces.find(r => r.name === name)) category = 'casual';
     else if (hiddenRestaurants.find(r => r.name === name)) category = 'hidden';
     document.getElementById('categoryInput').value = category;
 
@@ -537,6 +1184,7 @@ function editRestaurant(name) {
                     }
                 }
                 saveRestaurants();
+                refreshRestaurantViews();
             };
 
             const label = document.createElement('span');
@@ -564,7 +1212,7 @@ function editRestaurant(name) {
 
 function deleteRestaurant(index) {
     if (confirm('Are you sure you want to delete this restaurant?')) {
-        const allRestaurants = [...selectedPlaces, ...honorableMentions, ...hiddenRestaurants, ...dayToDayPlaces];
+        const allRestaurants = [...selectedPlaces, ...honorableMentions, ...casualPlaces, ...hiddenRestaurants, ...dayToDayPlaces];
         const restaurant = allRestaurants[index];
 
         // Find and remove from the correct array
@@ -576,21 +1224,25 @@ function deleteRestaurant(index) {
             if (honorableIndex !== -1) {
                 honorableMentions.splice(honorableIndex, 1);
             } else {
-                const hiddenIndex = hiddenRestaurants.findIndex(r => r.name === restaurant.name);
-                if (hiddenIndex !== -1) {
-                    hiddenRestaurants.splice(hiddenIndex, 1);
+                const casualIndex = casualPlaces.findIndex(r => r.name === restaurant.name);
+                if (casualIndex !== -1) {
+                    casualPlaces.splice(casualIndex, 1);
                 } else {
-                    const dayToDayIndex = dayToDayPlaces.findIndex(r => r.name === restaurant.name);
-                    if (dayToDayIndex !== -1) {
-                        dayToDayPlaces.splice(dayToDayIndex, 1);
+                    const hiddenIndex = hiddenRestaurants.findIndex(r => r.name === restaurant.name);
+                    if (hiddenIndex !== -1) {
+                        hiddenRestaurants.splice(hiddenIndex, 1);
+                    } else {
+                        const dayToDayIndex = dayToDayPlaces.findIndex(r => r.name === restaurant.name);
+                        if (dayToDayIndex !== -1) {
+                            dayToDayPlaces.splice(dayToDayIndex, 1);
+                        }
                     }
                 }
             }
         }
 
         saveRestaurants();
-        renderRestaurants();
-        renderAdminList();
+        refreshRestaurantViews();
     }
 }
 
@@ -612,6 +1264,7 @@ function handleFormSubmit(e) {
         // Edit existing - find in all arrays
         const restaurant = selectedPlaces.find(r => r.name === editingRestaurantName) ||
             honorableMentions.find(r => r.name === editingRestaurantName) ||
+            casualPlaces.find(r => r.name === editingRestaurantName) ||
             hiddenRestaurants.find(r => r.name === editingRestaurantName) ||
             dayToDayPlaces.find(r => r.name === editingRestaurantName);
 
@@ -630,6 +1283,7 @@ function handleFormSubmit(e) {
             // Handle category change - remove from old array and add to new
             const oldCategory = selectedPlaces.find(r => r.name === editingRestaurantName) ? 'selected' :
                 honorableMentions.find(r => r.name === editingRestaurantName) ? 'honorable' :
+                    casualPlaces.find(r => r.name === editingRestaurantName) ? 'casual' :
                     hiddenRestaurants.find(r => r.name === editingRestaurantName) ? 'hidden' : 'everyday';
 
             if (oldCategory !== category) {
@@ -640,6 +1294,9 @@ function handleFormSubmit(e) {
                 } else if (oldCategory === 'honorable') {
                     const idx = honorableMentions.findIndex(r => r.name === editingRestaurantName);
                     if (idx !== -1) honorableMentions.splice(idx, 1);
+                } else if (oldCategory === 'casual') {
+                    const idx = casualPlaces.findIndex(r => r.name === editingRestaurantName);
+                    if (idx !== -1) casualPlaces.splice(idx, 1);
                 } else if (oldCategory === 'hidden') {
                     const idx = hiddenRestaurants.findIndex(r => r.name === editingRestaurantName);
                     if (idx !== -1) hiddenRestaurants.splice(idx, 1);
@@ -653,6 +1310,8 @@ function handleFormSubmit(e) {
                     selectedPlaces.push(restaurant);
                 } else if (category === 'honorable') {
                     honorableMentions.push(restaurant);
+                } else if (category === 'casual') {
+                    casualPlaces.push(restaurant);
                 } else if (category === 'hidden') {
                     hiddenRestaurants.push(restaurant);
                 }
@@ -678,6 +1337,8 @@ function handleFormSubmit(e) {
             selectedPlaces.push(newRestaurant);
         } else if (category === 'honorable') {
             honorableMentions.push(newRestaurant);
+        } else if (category === 'casual') {
+            casualPlaces.push(newRestaurant);
         } else if (category === 'hidden') {
             hiddenRestaurants.push(newRestaurant);
         } else {
@@ -686,8 +1347,7 @@ function handleFormSubmit(e) {
     }
 
     saveRestaurants();
-    renderRestaurants();
-    renderAdminList();
+    refreshRestaurantViews();
     resetForm();
     document.getElementById('adminPanel').hidden = true;
 }
@@ -702,6 +1362,8 @@ function exportData() {
     const data = {
         selectedPlaces,
         honorableMentions,
+        casualPlaces,
+        hiddenRestaurants,
         dayToDayPlaces
     };
     const json = JSON.stringify(data, null, 2);
@@ -721,16 +1383,17 @@ function importData(e) {
     reader.onload = (event) => {
         try {
             const imported = JSON.parse(event.target.result);
-            if (imported.selectedPlaces && imported.honorableMentions && imported.dayToDayPlaces) {
+            if (Array.isArray(imported.selectedPlaces) && Array.isArray(imported.honorableMentions)) {
                 selectedPlaces = imported.selectedPlaces;
                 honorableMentions = imported.honorableMentions;
-                dayToDayPlaces = imported.dayToDayPlaces;
+                casualPlaces = Array.isArray(imported.casualPlaces) ? imported.casualPlaces : casualPlaces;
+                hiddenRestaurants = Array.isArray(imported.hiddenRestaurants) ? imported.hiddenRestaurants : [];
+                dayToDayPlaces = Array.isArray(imported.dayToDayPlaces) ? imported.dayToDayPlaces : [];
                 saveRestaurants();
-                renderRestaurants();
-                renderAdminList();
+                refreshRestaurantViews();
                 alert('Data imported successfully!');
             } else {
-                alert('Invalid import format. Expected {selectedPlaces: [], honorableMentions: [], dayToDayPlaces: []}');
+                alert('Invalid import format. Expected at least {selectedPlaces: [], honorableMentions: []}');
             }
         } catch (err) {
             alert('Error importing data: ' + err.message);
@@ -741,10 +1404,13 @@ function importData(e) {
 
 function resetData() {
     if (confirm('This will reset all data to default. Are you sure?')) {
-        localStorage.removeItem('food_rec_selected_places');
-        localStorage.removeItem('food_rec_honorable_mentions');
-        localStorage.removeItem('food_rec_day_to_day');
-        localStorage.removeItem('food_rec_hidden_restaurants');
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.selected);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.honorable);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.casual);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.dayToDay);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.hidden);
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.source);
+        clearLegacyRestaurantSessionCache();
         // Reload from JSON files
         location.reload();
     }
@@ -755,10 +1421,12 @@ function resetData() {
 // =========================================
 function saveRestaurants() {
     try {
-        localStorage.setItem('food_rec_selected_places', JSON.stringify(selectedPlaces));
-        localStorage.setItem('food_rec_honorable_mentions', JSON.stringify(honorableMentions));
-        localStorage.setItem('food_rec_day_to_day', JSON.stringify(dayToDayPlaces));
-        localStorage.setItem('food_rec_hidden_restaurants', JSON.stringify(hiddenRestaurants));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.selected, JSON.stringify(selectedPlaces));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.honorable, JSON.stringify(honorableMentions));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.casual, JSON.stringify(casualPlaces));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.dayToDay, JSON.stringify(dayToDayPlaces));
+        localStorage.setItem(LOCAL_STORAGE_KEYS.hidden, JSON.stringify(hiddenRestaurants));
+        setRestaurantDataSource('local');
     } catch (error) {
         console.warn('Unable to save restaurants', error);
     }

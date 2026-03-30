@@ -50,6 +50,7 @@ food_rec/
 ├── day_to_day.json         # Day-to-day recommendations
 ├── honorable_mentions.json # Honorable mentions
 ├── selected_places.json    # Featured places
+├── casual.json             # Casual places
 ├── media_index.json        # Media/image index
 ├── images/                 # Restaurant images
 ├── _assets/                # PDF assets

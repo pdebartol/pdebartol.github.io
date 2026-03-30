@@ -6,7 +6,7 @@
         "rating": 5,
         "description": "Paccheri alla Vittorio",
         "location": "Brusaporto, Italy",
-        "notes": "Three-Michelin-star experience.",
+        "notes": "",
         "map": "https://www.google.com/maps/search/?api=1&query=Da+Vittorio,+Via+Cantalupa,+17,+24060+Brusaporto+BG,+Italy",
         "photo": "images/da-vittorio/IMG_3909.jpeg",
         "lat": 45.666,
@@ -38,7 +38,7 @@
         "rating": 5,
         "description": "Chu-toro",
         "location": "Tokyo, Japan",
-        "notes": "I did the omakase. Insane tuna quality.",
+        "notes": "Insane tuna quality.",
         "map": "https://maps.app.goo.gl/nxv2v458CuKYZMMu9",
         "photo": "images/sushi-ryujiro/media-16.jpg",
         "lat": 35.6762,
@@ -72,7 +72,7 @@
         "rating": 5,
         "description": "Gamberi al vapore",
         "location": "Napoli, Italy",
-        "notes": "Great seafood, one of the best places in Italy. This place is a little gem in the middle of nowhere, not easy to reach.",
+        "notes": "This place is a little gem in the middle of nowhere, not easy to reach. Great seafood, one of the best places in Italy.",
         "map": "https://maps.app.goo.gl/zDmyUh3DvVoRmPPk6",
         "photo": "images/punto-nave/media-11.jpg",
         "lat": 40.8518,
@@ -128,6 +128,19 @@
         "lng": 14.2681
     },
     {
+        "name": "Da Michele",
+        "cuisine": "italian",
+        "price": "$$",
+        "rating": 5,
+        "description": "Margherita",
+        "location": "Napoli, Italy",
+        "map": "https://maps.app.goo.gl/NbAscuZpSnGigJ5M7",
+        "photo": "images/da-michele/media-1.jpg",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "hiddenImages": []
+    },
+    {
         "name": "La Dong",
         "cuisine": "vietnamese",
         "price": "$$",
@@ -139,6 +152,20 @@
         "photo": "images/la-dong/media-1.jpg",
         "lat": 40.7128,
         "lng": -74.006,
+        "hiddenImages": []
+    },
+    {
+        "name": "Yat Tung Heen",
+        "cuisine": "chinese",
+        "price": "$$",
+        "rating": 4,
+        "description": "Dim sum and Cantonese classics",
+        "location": "Hong Kong, China",
+        "notes": "",
+        "map": "https://share.google/4zZi5hTxn9r79ilyi",
+        "photo": "images/Yat-tung-heen/IMG_4353.JPEG",
+        "lat": 22.3078,
+        "lng": 114.1715,
         "hiddenImages": []
     },
     {
@@ -198,6 +225,20 @@
         "hiddenImages": []
     },
     {
+        "name": "El Xampanyet",
+        "cuisine": "spanish",
+        "price": "$$",
+        "rating": 4,
+        "description": "Razor clam",
+        "location": "Barcelona, Spain",
+        "notes": "Great tapas place. It's a standing bar and there will probably be some queue",
+        "map": "https://maps.app.goo.gl/M7eui3kQJpCnVSZH6",
+        "photo": "images/el-xampanyet/media-4.jpg",
+        "lat": 41.3851,
+        "lng": 2.1734,
+        "hiddenImages": []
+    },
+    {
         "name": "Ningyocho Imahan Ginza",
         "cuisine": "japanese",
         "price": "$$$",
@@ -210,5 +251,17 @@
         "lat": 35.6762,
         "lng": 139.6503,
         "hiddenImages": []
-    }
+    } , {
+    "name": "Pasticceria Sal De Riso",
+    "cuisine": "italian",
+    "price": "$$",
+    "rating": 4,
+    "description": "Capolavori di dolcezza",
+    "location": "Maiori, Italy",
+    "notes": "",
+    "map": "https://maps.app.goo.gl/3zRHUrWdLnB6uxjDA",
+    "photo": "images/pasticceria-sal-de-riso/media-1.jpg",
+    "lat": 40.6487,
+    "lng": 14.6418
+  }
 ]

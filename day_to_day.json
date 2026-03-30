@@ -182,32 +182,6 @@
     "lng": 9.19
   },
   {
-    "name": "IYO Experience",
-    "cuisine": "japanese",
-    "price": "$$$$",
-    "rating": 4,
-    "description": "Trust the chef",
-    "location": "Milan, Italy",
-    "notes": "",
-    "map": "https://g.co/kgs/JxAxm7e",
-    "photo": "images/iyo-experience/media-1.jpg",
-    "lat": 45.4642,
-    "lng": 9.19
-  },
-  {
-    "name": "Mimi alla ferrovia",
-    "cuisine": "italian",
-    "price": "$$",
-    "rating": 4,
-    "description": "Genovese",
-    "location": "Napoli, Italy",
-    "notes": "",
-    "map": "https://maps.app.goo.gl/jhwrkFdr6qjfhRQ49",
-    "photo": "images/mimi-alla-ferrovia/media-1.jpg",
-    "lat": 40.8518,
-    "lng": 14.2681
-  },
-  {
     "name": "Ivan Ramen",
     "cuisine": "japanese",
     "price": "$$",
@@ -221,32 +195,6 @@
     "lng": -74.006
   },
   {
-    "name": "Okonomiyaki Sakaba O",
-    "cuisine": "japanese",
-    "price": "$$",
-    "rating": 4,
-    "description": "Okonomiyaki and Soba",
-    "location": "Osaka, Japan",
-    "notes": "",
-    "map": "https://g.co/kgs/AzTu3KG",
-    "photo": "images/okonomiyaki-sakaba-o/media-1.jpg",
-    "lat": 34.6937,
-    "lng": 135.5023
-  },
-  {
-    "name": "Sushi Daigo",
-    "cuisine": "japanese",
-    "price": "$$$",
-    "rating": 4,
-    "description": "Trust the chef",
-    "location": "Osaka, Japan",
-    "notes": "Very authentic sushi place",
-    "map": "https://g.co/kgs/7KvKjEd",
-    "photo": "images/sushi-daigo/media-1.jpg",
-    "lat": 34.6937,
-    "lng": 135.5023
-  },
-  {
     "name": "Só Tea",
     "cuisine": "tea",
     "price": "$",
@@ -258,19 +206,6 @@
     "photo": "images/s-tea/media-1.jpg",
     "lat": 47.3769,
     "lng": 8.5417
-  },
-  {
-    "name": "Braceria Bifulco",
-    "cuisine": "italian",
-    "price": "$$$",
-    "rating": 4,
-    "description": "Tartare di manzo",
-    "location": "Napoli, Italy",
-    "notes": "N.B. The owner died in an accident recently, I am not sure what will happen to this place. Exceptional wine selection. One of the best bracerie in Italy.",
-    "map": "https://maps.app.goo.gl/hHKAam6f69Y4vraz8",
-    "photo": "images/braceria-bifulco/media-1.jpg",
-    "lat": 40.8518,
-    "lng": 14.2681
   },
   {
     "name": "Luciano",
@@ -333,7 +268,7 @@
     "location": "Zurich, Switzerland",
     "notes": "A bit too much olive oil on pizza",
     "map": "https://maps.app.goo.gl/QstkKah4KLa4ZEUCA",
-    "photo": "images/margher/media-1.jpg",
+    "photo": "images/margher/media-3.jpg",
     "lat": 47.3769,
     "lng": 8.5417
   },

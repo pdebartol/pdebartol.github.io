@@ -24,16 +24,9 @@
         href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
 </head>
 
-<body>
+<body class="food-page" data-collection-view="selected">
     <nav class="main-nav">
         <div class="nav-logo">Piersilvio De Bartolomeis</div>
         <div class="nav-links">
@@ -43,9 +36,7 @@
         </div>
     </nav>
     <div class="page-container page-container-wide">
-        <p class="page-subtitle" style="margin-bottom: 2rem; color: #666; text-align: center;">A curated collection of
-            my favorite dining
-            spots.</p>
+        <p class="page-subtitle food-subtitle">A curated collection of my favorite dining spots.</p>
 
         <!-- Admin Panel -->
         <section id="adminPanel" class="admin-panel" hidden>
@@ -116,6 +107,7 @@
                         <select id="categoryInput" required>
                             <option value="selected">Selected Places</option>
                             <option value="honorable">Honorable Mentions</option>
+                            <option value="casual">Casual Places</option>
                             <option value="hidden">Hidden (Not Shown)</option>
                         </select>
                     </label>
@@ -150,33 +142,58 @@
         </section>
 
 
-        <!-- View Toggle -->
-        <div class="view-toggle">
-            <button class="view-btn active" data-view="selected">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                    </polygon>
-                </svg>
-                Selected Places
-            </button>
-            <button class="view-btn" data-view="honorable">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="8" r="7"></circle>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                </svg>
-                Honorable Mentions
-            </button>
+        <section class="food-toolbar" aria-label="Food page categories">
+            <div class="view-toggle">
+                <button class="view-btn active" type="button" data-view="selected">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                        </polygon>
+                    </svg>
+                    Selected Places
+                </button>
+                <button class="view-btn" type="button" data-view="honorable">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                    </svg>
+                    Honorable Mentions
+                </button>
+                <button class="view-btn" type="button" data-view="casual">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 10c0 4.42 3.58 8 8 8s8-3.58 8-8"></path>
+                        <path d="M7 10V6M12 10V4M17 10V6"></path>
+                    </svg>
+                    Casual Places
+                </button>
+            </div>
 
-        </div>
+            <details id="cityFilterDropdown" class="food-city-filter">
+                <summary class="food-city-trigger">
+                    <span class="food-city-trigger-copy">
+                        <span class="food-filter-label">Cities</span>
+                        <span id="cityFilterTriggerLabel" class="food-city-trigger-value">All Cities</span>
+                    </span>
+                    <svg class="food-city-trigger-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                </summary>
+                <div class="food-city-menu">
+                    <div class="food-city-menu-header">
+                        <div>
+                            <p class="food-city-menu-title">Select one city</p>
+                        </div>
+                        <button id="clearCityFilter" type="button" class="food-city-clear">Clear</button>
+                    </div>
+                    <div id="cityFilterOptions" class="food-city-options"></div>
+                </div>
+            </details>
 
-        <!-- City Filter -->
-        <div class="filter-container">
-            <label for="cityFilter">Filter by City:</label>
-            <select id="cityFilter" class="city-filter-select">
-                <option value="all">All Cities</option>
-            </select>
-        </div>
+            <div class="food-summary">
+                <span class="summary-chip"><strong id="summaryCount">0 restaurants</strong></span>
+            </div>
+        </section>
 
         <!-- Restaurant Grid -->
         <div id="restaurantGrid" class="restaurant-grid">
@@ -208,10 +225,9 @@
 
     <footer class="site-footer">
         <p>&copy; 2025 Piersilvio De Bartolomeis. All rights reserved.</p>
-        <p class="vibecode-credit">Vibe coded using Antigravity.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=19"></script>
 </body>
 
 </html>
