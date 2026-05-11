@@ -251,17 +251,60 @@
         "lat": 35.6762,
         "lng": 139.6503,
         "hiddenImages": []
-    } , {
-    "name": "Pasticceria Sal De Riso",
-    "cuisine": "italian",
-    "price": "$$",
-    "rating": 4,
-    "description": "Capolavori di dolcezza",
-    "location": "Maiori, Italy",
-    "notes": "",
-    "map": "https://maps.app.goo.gl/3zRHUrWdLnB6uxjDA",
-    "photo": "images/pasticceria-sal-de-riso/media-1.jpg",
-    "lat": 40.6487,
-    "lng": 14.6418
-  }
+    },
+    {
+        "name": "Pasticceria Sal De Riso",
+        "cuisine": "italian",
+        "price": "$$",
+        "rating": 4,
+        "description": "Capolavori di dolcezza",
+        "location": "Maiori, Italy",
+        "notes": "",
+        "map": "https://maps.app.goo.gl/3zRHUrWdLnB6uxjDA",
+        "photo": "images/pasticceria-sal-de-riso/media-1.jpg",
+        "lat": 40.6487,
+        "lng": 14.6418
+    },
+    {
+        "name": "Chongqing Lao Zao",
+        "cuisine": "chinese",
+        "price": "$$$",
+        "rating": 4,
+        "description": "Chongqing-style hot pot",
+        "location": "New York, USA",
+        "notes": "",
+        "photo": "images/chongqing-lao-zao/IMG_5066.jpeg",
+        "map": "https://share.google/rWkZ5YMv6D4V7KYl9",
+        "lat": 40.7602,
+        "lng": -73.833,
+        "hiddenImages": []
+    },
+    {
+        "name": "Soothr",
+        "cuisine": "thai",
+        "price": "$$",
+        "rating": 4,
+        "description": "Khao Soi Tiger Prawn",
+        "location": "New York, USA",
+        "notes": "",
+        "photo": "images/soothr/IMG_5080.jpeg",
+        "map": "https://www.google.com/maps/search/?api=1&query=Soothr+Thai+Noodle+Bar,+204+E+13th+St,+New+York,+NY+10003",
+        "lat": 40.7324,
+        "lng": -73.9861,
+        "hiddenImages": []
+    },
+    {
+        "name": "Monkey Bar",
+        "cuisine": "american",
+        "price": "$$$",
+        "rating": 4,
+        "description": "Truffle mafaldine and steak",
+        "location": "New York, USA",
+        "notes": "",
+        "photo": "images/monkey-bar/IMG_5076.jpeg",
+        "map": "https://www.google.com/maps/search/?api=1&query=Monkey+Bar,+60+E+54th+St,+New+York,+NY+10022",
+        "lat": 40.7607,
+        "lng": -73.973,
+        "hiddenImages": []
+    }
 ]
