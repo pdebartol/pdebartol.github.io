@@ -1103,6 +1103,13 @@ body {
     font-weight: 500;
 }
 
+.research-page .page-subtitle {
+    margin-bottom: 2rem;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
 .publication-authors {
     font-size: 0.9rem;
     color: #666;
