@@ -33,7 +33,7 @@
     --space-2xl: 3rem;
 
     /* Typography */
-    --font-primary: 'Source Serif 4', serif;
+    --font-primary: "Avenir Next", Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     /* Effects */
     --radius-sm: 4px;
@@ -1040,7 +1040,7 @@ body {
 }
 
 .page-container {
-    max-width: 1100px;
+    max-width: 900px;
     padding: 3rem 5% 4rem;
     line-height: 1.7;
 }
@@ -1097,6 +1097,10 @@ body {
     line-height: 1.5;
     display: block;
     margin-bottom: 0.5rem;
+}
+
+.research-page .publication-title {
+    font-weight: 500;
 }
 
 .publication-authors {

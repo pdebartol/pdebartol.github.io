@@ -704,7 +704,7 @@ function migrateRestaurantPhoto(name, newPhoto, collections) {
 function migrateRestaurantMedia() {
     const migratedMargheri = migrateRestaurantPhoto('Margherì', 'images/margher/media-3.jpg', [casualPlaces, dayToDayPlaces]);
     const migratedSoothr = migrateRestaurantPhoto('Soothr', 'images/soothr/IMG_5080.jpeg', [selectedPlaces]);
-    const migratedMonkeyBar = migrateRestaurantPhoto('Monkey Bar', 'images/monkey-bar/IMG_5075.jpeg', [selectedPlaces]);
+    const migratedMonkeyBar = migrateRestaurantPhoto('Monkey Bar', 'images/monkey-bar/IMG_5076.jpeg', [selectedPlaces]);
 
     return migratedMargheri || migratedSoothr || migratedMonkeyBar;
 }
